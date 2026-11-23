@@ -166,6 +166,17 @@ function texto(valor) {
   return typeof valor === "string" ? valor.trim() : "";
 }
 
+// Regla 2.4 (v3) - BUG-05: identificadores numéricos estrictos.
+// Acepta un entero positivo o un string de solo dígitos; cualquier otra cosa da null.
+function enteroPositivo(valor) {
+  if (typeof valor === "number") return Number.isInteger(valor) && valor > 0 ? valor : null;
+  if (typeof valor === "string" && /^\d+$/.test(valor.trim())) {
+    const n = Number(valor.trim());
+    return n > 0 ? n : null;
+  }
+  return null;
+}
+
 function errorCampo(res, campo, mensaje, status = 400) {
   return res.status(status).json({ error: mensaje, campo });
 }
@@ -568,7 +579,7 @@ app.patch("/api/empleados/:id/baja", requiereAdministrador, requiereModulo("pers
 // =====================================================
 app.post("/api/equipos/:codigo/entrega", requiereLogin, requiereModulo("personas"), (req, res) => {
   const equipo = buscarEquipoPorParam(req.params.codigo);
-  const empleadoId = Number(req.body.empleadoId);
+  const empleadoId = enteroPositivo(req.body.empleadoId);
   const observaciones = texto(req.body.observaciones);
 
   if (!equipo) {
