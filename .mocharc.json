@@ -1,0 +1,6 @@
+{
+  "spec": ["test/regresion/*.test.js"],
+  "require": ["test/soporte/hooks.js"],
+  "timeout": 60000,
+  "slow": 5000
+}
