@@ -26,15 +26,18 @@ const MODULOS_INFO = {
   identificacion: { nombre: "Identificación física" }
 };
 
-const usuarios = [
-  { id: 1, usuario: "admin", password: "admin123", nombre: "Administrador", rol: "Administrador" },
-  { id: 2, usuario: "operador", password: "operador123", nombre: "Operador", rol: "Operador" }
-];
+const ROLES = ["Administrador", "Operador"];
+
+// HU-11 (v3): bloqueo por intentos fallidos (corrige BUG-06)
+const MAX_INTENTOS = 5;
+const BLOQUEO_MS = 15 * 60 * 1000;
+const MENSAJE_BLOQUEO = "Usuario bloqueado por intentos fallidos. Intentá más tarde o contactá a un Administrador.";
 
 // =====================================================
 // Datos en memoria (se restituyen con resetDatos)
 // =====================================================
-let equipos, empleados, tenencias, actas, modulos;
+let equipos, empleados, tenencias, actas, modulos, usuarios, auditoria;
+let siguienteUsuario, siguienteAuditoria;
 let siguienteEquipo, siguienteEmpleado, siguienteTenencia, siguienteActaEntrega, siguienteActaDevolucion;
 
 function codigoEquipo(n) {
@@ -47,6 +50,20 @@ function numeroActa(prefijo, n) {
 
 function resetDatos() {
   const ahora = new Date();
+
+  const usuarioBase = (id, usuario, password, nombre, rol) => ({
+    id, usuario, password, nombre, rol, activo: true, intentosFallidos: 0, bloqueadoHasta: null
+  });
+  usuarios = [
+    usuarioBase(1, "admin", "admin123", "Administrador", "Administrador"),
+    usuarioBase(2, "operador", "operador123", "Operador", "Operador")
+  ];
+  siguienteUsuario = 3;
+
+  // HU-12: el registro de auditoría arranca vacío
+  auditoria = [];
+  siguienteAuditoria = 1;
+
   const hace = (dias) => new Date(ahora.getTime() - dias * 24 * 60 * 60 * 1000).toISOString();
 
   const base = (n, marca, modelo, numeroSerie, categoria) => ({
@@ -133,6 +150,21 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 
+// HU-11 (v3): la sesión refleja el estado actual del usuario.
+// Si fue desactivado, la sesión deja de valer; si le cambiaron el rol, rige el nuevo.
+app.use((req, res, next) => {
+  if (req.session.usuario) {
+    const actual = usuarios.find((u) => u.id === req.session.usuario.id);
+    if (!actual || !actual.activo) {
+      delete req.session.usuario;
+    } else {
+      req.session.usuario.rol = actual.rol;
+      req.session.usuario.nombre = actual.nombre;
+    }
+  }
+  next();
+});
+
 function requiereLogin(req, res, next) {
   if (!req.session.usuario) {
     return res.status(401).json({ error: "No autenticado." });
@@ -164,6 +196,22 @@ function requiereModulo(clave) {
 // =====================================================
 function texto(valor) {
   return typeof valor === "string" ? valor.trim() : "";
+}
+
+// HU-12: registro de auditoría (inmutable: solo se agregan registros)
+function auditar(usuario, accion, objeto, detalle = "") {
+  auditoria.push({
+    id: siguienteAuditoria++,
+    fecha: new Date().toISOString(),
+    usuario: usuario || "",
+    accion,
+    objeto: objeto || "",
+    detalle
+  });
+}
+
+function quien(req) {
+  return req.session.usuario ? req.session.usuario.usuario : "";
 }
 
 // Regla 2.4 (v3) - BUG-05: identificadores numéricos estrictos.
@@ -262,18 +310,44 @@ app.post("/api/login", (req, res) => {
     return res.status(400).json({ error: "Ingresá usuario y contraseña." });
   }
 
-  const encontrado = usuarios.find((u) => u.usuario === usuario && u.password === password);
+  const encontrado = usuarios.find((u) => u.usuario === usuario) || null;
+  const ahora = Date.now();
 
-  if (!encontrado) {
+  // HU-01 (v3) / HU-11 - BUG-06: usuario bloqueado por intentos fallidos
+  if (encontrado && encontrado.bloqueadoHasta && encontrado.bloqueadoHasta > ahora) {
+    auditar(usuario, "LOGIN_FALLIDO", usuario, "Intento con el usuario bloqueado.");
+    return res.status(423).json({ error: MENSAJE_BLOQUEO });
+  }
+  if (encontrado && encontrado.bloqueadoHasta && encontrado.bloqueadoHasta <= ahora) {
+    encontrado.bloqueadoHasta = null; // el bloqueo venció
+  }
+
+  const valido = encontrado && encontrado.activo && encontrado.password === password;
+
+  if (!valido) {
+    auditar(usuario, "LOGIN_FALLIDO", usuario, "Usuario o contraseña incorrectos.");
+
+    if (encontrado) {
+      encontrado.intentosFallidos++;
+      if (encontrado.intentosFallidos >= MAX_INTENTOS) {
+        encontrado.intentosFallidos = 0;
+        encontrado.bloqueadoHasta = ahora + BLOQUEO_MS;
+        auditar(usuario, "USUARIO_BLOQUEADO", usuario, `${MAX_INTENTOS} intentos fallidos consecutivos.`);
+        return res.status(423).json({ error: MENSAJE_BLOQUEO });
+      }
+    }
+    // Mismo mensaje si no existe, si la contraseña es incorrecta o si está inactivo (HU-01, HU-11)
     return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
   }
 
+  encontrado.intentosFallidos = 0;
   req.session.usuario = {
     id: encontrado.id,
     usuario: encontrado.usuario,
     nombre: encontrado.nombre,
     rol: encontrado.rol
   };
+  auditar(encontrado.usuario, "LOGIN_OK", encontrado.usuario);
 
   res.json({ mensaje: "Login correcto.", usuario: req.session.usuario });
 });
@@ -286,10 +360,12 @@ app.get("/api/me", (req, res) => {
 });
 
 app.post("/api/logout", (req, res) => {
+  const usuario = quien(req);
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ error: "No se pudo cerrar la sesión." });
     }
+    if (usuario) auditar(usuario, "LOGOUT", usuario);
     res.json({ mensaje: "Sesión cerrada." });
   });
 });
@@ -302,42 +378,55 @@ app.get("/api/equipos", requiereLogin, (req, res) => {
   res.json(equipos.map(equipoPublico));
 });
 
-app.post("/api/equipos", requiereLogin, (req, res) => {
-  const marca = texto(req.body.marca);
-  const modelo = texto(req.body.modelo);
-  const numeroSerie = texto(req.body.numeroSerie);
-  const categoria = texto(req.body.categoria);
-  const observaciones = texto(req.body.observaciones);
+// HU-04 / HU-05: mismas validaciones para el alta y la edición.
+// Devuelve { datos } o { error: { campo, mensaje, status } }.
+function validarEquipo(body, idPropio = null) {
+  const marca = texto(body.marca);
+  const modelo = texto(body.modelo);
+  const numeroSerie = texto(body.numeroSerie);
+  const categoria = texto(body.categoria);
+  const observaciones = texto(body.observaciones);
+  const falla = (campo, mensaje, status = 400) => ({ error: { campo, mensaje, status } });
 
   if (largo(marca) < 2 || largo(marca) > 50) {
-    return errorCampo(res, "marca", "La marca debe tener entre 2 y 50 caracteres.");
+    return falla("marca", "La marca debe tener entre 2 y 50 caracteres.");
   }
   if (largo(modelo) < 2 || largo(modelo) > 80) {
-    return errorCampo(res, "modelo", "El modelo debe tener entre 2 y 80 caracteres.");
+    return falla("modelo", "El modelo debe tener entre 2 y 80 caracteres.");
   }
   if (largo(numeroSerie) < 4 || largo(numeroSerie) > 40) {
-    return errorCampo(res, "numeroSerie", "El número de serie debe tener entre 4 y 40 caracteres.");
+    return falla("numeroSerie", "El número de serie debe tener entre 4 y 40 caracteres.");
   }
   if (!/^[A-Za-z0-9-]+$/.test(numeroSerie)) {
-    return errorCampo(res, "numeroSerie", "El número de serie solo admite letras, números y guiones.");
+    return falla("numeroSerie", "El número de serie solo admite letras, números y guiones.");
   }
   if (!/[A-Za-z0-9]/.test(numeroSerie)) {
     // HU-04 (v3) - OBS-01
-    return errorCampo(res, "numeroSerie", "El número de serie debe contener al menos una letra o un número.");
+    return falla("numeroSerie", "El número de serie debe contener al menos una letra o un número.");
   }
   if (!CATEGORIAS.includes(categoria)) {
-    return errorCampo(res, "categoria", "Seleccioná una categoría.");
+    return falla("categoria", "Seleccioná una categoría.");
   }
   if (largo(observaciones) > 500) {
-    return errorCampo(res, "observaciones", "Las observaciones admiten hasta 500 caracteres.");
+    return falla("observaciones", "Las observaciones admiten hasta 500 caracteres.");
   }
 
   const serieExiste = equipos.some(
-    (e) => e.numeroSerie.trim().toLowerCase() === numeroSerie.toLowerCase()
+    (e) => e.id !== idPropio && e.numeroSerie.trim().toLowerCase() === numeroSerie.toLowerCase()
   );
   if (serieExiste) {
-    return errorCampo(res, "numeroSerie", "Ya existe un equipo con ese número de serie.", 409);
+    return falla("numeroSerie", "Ya existe un equipo con ese número de serie.", 409);
   }
+
+  return { datos: { marca, modelo, numeroSerie, categoria, observaciones } };
+}
+
+app.post("/api/equipos", requiereLogin, (req, res) => {
+  const { datos, error } = validarEquipo(req.body);
+  if (error) {
+    return errorCampo(res, error.campo, error.mensaje, error.status);
+  }
+  const { marca, modelo, numeroSerie, categoria, observaciones } = datos;
 
   const fecha = new Date().toISOString();
   const id = siguienteEquipo++;
@@ -358,6 +447,7 @@ app.post("/api/equipos", requiereLogin, (req, res) => {
   };
 
   equipos.push(nuevo);
+  auditar(quien(req), "EQUIPO_ALTA", nuevo.codigo, `${marca} ${modelo} · Serie ${numeroSerie} · ${categoria}`);
   res.status(201).json(equipoPublico(nuevo));
 });
 
@@ -435,6 +525,57 @@ app.get("/api/equipos/:codigo", requiereLogin, (req, res) => {
   res.json(ficha);
 });
 
+// Edición (HU-05, nueva en V3)
+const CAMPOS_EDITABLES = [
+  ["marca", "Marca"],
+  ["modelo", "Modelo"],
+  ["numeroSerie", "N° de serie"],
+  ["categoria", "Categoría"],
+  ["observaciones", "Observaciones"]
+];
+
+app.patch("/api/equipos/:codigo", requiereLogin, (req, res) => {
+  const equipo = buscarEquipoPorParam(req.params.codigo);
+
+  if (!equipo) {
+    return res.status(404).json({ error: `No se encontró ningún equipo con el código ${texto(req.params.codigo)}.` });
+  }
+  if (equipo.estado === "Dado de baja") {
+    return res.status(409).json({ error: "No se puede editar un equipo dado de baja." });
+  }
+
+  // Los campos no editables (código, estado, responsable, id) se ignoran.
+  // Un campo que no se envía conserva su valor actual.
+  const body = req.body || {};
+  const propuesta = {};
+  CAMPOS_EDITABLES.forEach(([campo]) => {
+    propuesta[campo] = body[campo] === undefined ? equipo[campo] : body[campo];
+  });
+
+  const { datos, error } = validarEquipo(propuesta, equipo.id);
+  if (error) {
+    return errorCampo(res, error.campo, error.mensaje, error.status);
+  }
+
+  const cambios = CAMPOS_EDITABLES
+    .filter(([campo]) => datos[campo] !== equipo[campo])
+    .map(([campo, etiqueta]) => ({ campo, etiqueta, antes: equipo[campo], despues: datos[campo] }));
+
+  if (cambios.length === 0) {
+    return res.json({ mensaje: "No hay cambios para guardar.", cambios: [], equipo: equipoPublico(equipo) });
+  }
+
+  cambios.forEach((c) => { equipo[c.campo] = c.despues; });
+  auditar(quien(req), "EQUIPO_EDICION", equipo.codigo,
+    cambios.map((c) => `${c.etiqueta}: "${c.antes}" → "${c.despues}"`).join("; "));
+
+  res.json({
+    mensaje: `Equipo ${equipo.codigo} actualizado correctamente.`,
+    cambios: cambios.map(({ campo, antes, despues }) => ({ campo, antes, despues })),
+    equipo: equipoPublico(equipo)
+  });
+});
+
 // Cambio de estado manual (HU-08 / HU-09)
 app.patch("/api/equipos/:codigo/estado", requiereLogin, (req, res) => {
   const equipo = buscarEquipoPorParam(req.params.codigo);
@@ -457,7 +598,10 @@ app.patch("/api/equipos/:codigo/estado", requiereLogin, (req, res) => {
     return errorCampo(res, "motivo", "El motivo debe tener entre 10 y 500 caracteres.");
   }
 
+  const desde = equipo.estado;
   registrarCambio(equipo, estado, motivo, req.session.usuario.usuario);
+  auditar(quien(req), estado === "Dado de baja" ? "EQUIPO_BAJA" : "EQUIPO_ESTADO", equipo.codigo,
+    `${desde} → ${estado}. Motivo: ${motivo}`);
   res.json({ mensaje: "Estado actualizado correctamente.", equipo: equipoPublico(equipo) });
 });
 
@@ -476,7 +620,9 @@ app.patch("/api/equipos/:codigo/baja", requiereAdministrador, (req, res) => {
     return errorCampo(res, "motivo", "El motivo debe tener entre 10 y 500 caracteres.");
   }
 
+  const desde = equipo.estado;
   registrarCambio(equipo, "Dado de baja", motivo, req.session.usuario.usuario);
+  auditar(quien(req), "EQUIPO_BAJA", equipo.codigo, `${desde} → Dado de baja. Motivo: ${motivo}`);
   res.json({ mensaje: "Equipo dado de baja correctamente.", equipo: equipoPublico(equipo) });
 });
 
@@ -548,6 +694,7 @@ app.post("/api/empleados", requiereLogin, requiereModulo("personas"), (req, res)
 
   const nuevo = { id: siguienteEmpleado++, nombre, apellido, documento, sector, email, activo: true };
   empleados.push(nuevo);
+  auditar(quien(req), "EMPLEADO_ALTA", documento, `${apellido}, ${nombre} · ${sector}`);
   res.status(201).json(empleadoPublico(nuevo));
 });
 
@@ -582,6 +729,7 @@ app.patch("/api/empleados/:id/baja", requiereAdministrador, requiereModulo("pers
   }
 
   emp.activo = false;
+  auditar(quien(req), "EMPLEADO_BAJA", emp.documento, nombreEmpleado(emp));
   res.json({ mensaje: "Empleado dado de baja correctamente.", empleado: empleadoPublico(emp) });
 });
 
@@ -629,6 +777,7 @@ app.post("/api/equipos/:codigo/entrega", requiereLogin, requiereModulo("personas
   registrarCambio(equipo, "Asignado", `Entrega a ${nombreEmpleado(emp)} (Acta ${numero})`, req.session.usuario.usuario);
   equipo.responsableId = emp.id;
   siguienteActaEntrega++;
+  auditar(quien(req), "ENTREGA", numero, `${equipo.codigo} entregado a ${nombreEmpleado(emp)}`);
 
   res.status(201).json({
     mensaje: `Equipo entregado. Acta ${numero} generada.`,
@@ -679,6 +828,8 @@ app.post("/api/equipos/:codigo/devolucion", requiereLogin, requiereModulo("perso
   registrarCambio(equipo, destino, motivo, req.session.usuario.usuario);
   equipo.responsableId = null;
   siguienteActaDevolucion++;
+  auditar(quien(req), "DEVOLUCION", numero,
+    `${equipo.codigo} devuelto por ${nombreEmpleado(emp)} - ${condicion}${condicion === "Con falla" ? `: ${falla}` : ""}`);
 
   res.status(201).json({
     mensaje: `Devolución registrada. Acta ${numero} generada.`,
@@ -741,7 +892,9 @@ app.put("/api/modulos/:clave", requiereAdministrador, (req, res) => {
     }
   }
 
+  const cambio = modulos[clave] !== activo;
   modulos[clave] = activo;
+  if (cambio) auditar(quien(req), activo ? "MODULO_ACTIVADO" : "MODULO_DESACTIVADO", MODULOS_INFO[clave].nombre);
   res.json({
     mensaje: `Módulo ${MODULOS_INFO[clave].nombre} ${activo ? "activado" : "desactivado"}.`,
     modulos
@@ -749,10 +902,189 @@ app.put("/api/modulos/:clave", requiereAdministrador, (req, res) => {
 });
 
 // =====================================================
+// Usuarios (HU-11, nueva en V3)
+// =====================================================
+const REGEX_USUARIO = /^[a-z0-9._]+$/;
+
+function usuarioPublico(u) {
+  // Nunca se devuelve la contraseña
+  return {
+    id: u.id,
+    usuario: u.usuario,
+    nombre: u.nombre,
+    rol: u.rol,
+    activo: u.activo,
+    bloqueado: Boolean(u.bloqueadoHasta && u.bloqueadoHasta > Date.now())
+  };
+}
+
+function buscarUsuario(nombreUsuario) {
+  return usuarios.find((u) => u.usuario === texto(nombreUsuario).toLowerCase()) || null;
+}
+
+function adminsActivos() {
+  return usuarios.filter((u) => u.activo && u.rol === "Administrador").length;
+}
+
+app.get("/api/usuarios", requiereAdministrador, (req, res) => {
+  res.json(usuarios.map(usuarioPublico));
+});
+
+app.post("/api/usuarios", requiereAdministrador, (req, res) => {
+  const usuario = texto(req.body.usuario);
+  const nombre = texto(req.body.nombre);
+  const rol = texto(req.body.rol);
+  const password = typeof req.body.password === "string" ? req.body.password : "";
+
+  if (largo(usuario) < 3 || largo(usuario) > 20 || !REGEX_USUARIO.test(usuario)) {
+    return errorCampo(res, "usuario", "El usuario debe tener entre 3 y 20 caracteres (minúsculas, números, . o _).");
+  }
+  if (largo(nombre) < 2 || largo(nombre) > 50 || !REGEX_NOMBRE.test(nombre)) {
+    return errorCampo(res, "nombre", "El nombre debe tener entre 2 y 50 caracteres y solo letras.");
+  }
+  if (!ROLES.includes(rol)) {
+    return errorCampo(res, "rol", "Seleccioná un rol.");
+  }
+  if (largo(password) < 8 || largo(password) > 50 || !/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/.test(password) || !/\d/.test(password)) {
+    return errorCampo(res, "password", "La contraseña debe tener entre 8 y 50 caracteres, con al menos una letra y un número.");
+  }
+  if (usuarios.some((u) => u.usuario.toLowerCase() === usuario.toLowerCase())) {
+    return errorCampo(res, "usuario", "Ya existe un usuario con ese nombre.", 409);
+  }
+
+  const nuevo = {
+    id: siguienteUsuario++, usuario, password, nombre, rol,
+    activo: true, intentosFallidos: 0, bloqueadoHasta: null
+  };
+  usuarios.push(nuevo);
+  auditar(quien(req), "USUARIO_ALTA", usuario, `${nombre} · ${rol}`);
+  res.status(201).json(usuarioPublico(nuevo));
+});
+
+app.patch("/api/usuarios/:usuario", requiereAdministrador, (req, res) => {
+  const objetivo = buscarUsuario(req.params.usuario);
+  const body = req.body || {};
+
+  if (!objetivo) {
+    return res.status(404).json({ error: "Usuario no encontrado." });
+  }
+
+  const cambiaRol = body.rol !== undefined;
+  const cambiaEstado = body.activo !== undefined;
+
+  if (!cambiaRol && !cambiaEstado) {
+    return res.status(400).json({ error: "Indicá el rol o el estado a modificar." });
+  }
+  if (cambiaRol && !ROLES.includes(body.rol)) {
+    return errorCampo(res, "rol", "Seleccioná un rol.");
+  }
+  if (cambiaEstado && typeof body.activo !== "boolean") {
+    return errorCampo(res, "activo", "Indicá si el usuario debe estar activo.");
+  }
+  if (objetivo.id === req.session.usuario.id) {
+    return res.status(409).json({ error: "No podés modificar tu propio rol o estado." });
+  }
+
+  const pierdeAdmin = objetivo.rol === "Administrador" && objetivo.activo &&
+    ((cambiaRol && body.rol !== "Administrador") || (cambiaEstado && body.activo === false));
+  if (pierdeAdmin && adminsActivos() <= 1) {
+    return res.status(409).json({ error: "Debe quedar al menos un Administrador activo." });
+  }
+
+  if (cambiaRol && body.rol !== objetivo.rol) {
+    auditar(quien(req), "USUARIO_ROL", objetivo.usuario, `${objetivo.rol} → ${body.rol}`);
+    objetivo.rol = body.rol;
+  }
+  if (cambiaEstado && body.activo !== objetivo.activo) {
+    auditar(quien(req), "USUARIO_ESTADO", objetivo.usuario, body.activo ? "Inactivo → Activo" : "Activo → Inactivo");
+    objetivo.activo = body.activo;
+  }
+
+  res.json({ mensaje: `Usuario ${objetivo.usuario} actualizado correctamente.`, usuario: usuarioPublico(objetivo) });
+});
+
+app.post("/api/usuarios/:usuario/desbloquear", requiereAdministrador, (req, res) => {
+  const objetivo = buscarUsuario(req.params.usuario);
+
+  if (!objetivo) {
+    return res.status(404).json({ error: "Usuario no encontrado." });
+  }
+  if (!usuarioPublico(objetivo).bloqueado) {
+    return res.status(409).json({ error: "El usuario no está bloqueado." });
+  }
+
+  objetivo.bloqueadoHasta = null;
+  objetivo.intentosFallidos = 0;
+  auditar(quien(req), "USUARIO_DESBLOQUEO", objetivo.usuario);
+  res.json({ mensaje: `Usuario ${objetivo.usuario} desbloqueado.`, usuario: usuarioPublico(objetivo) });
+});
+
+// =====================================================
+// Auditoría (HU-12, nueva en V3)
+// =====================================================
+const ACCIONES_AUDITORIA = [
+  "LOGIN_OK", "LOGIN_FALLIDO", "USUARIO_BLOQUEADO", "LOGOUT",
+  "EQUIPO_ALTA", "EQUIPO_EDICION", "EQUIPO_ESTADO", "EQUIPO_BAJA",
+  "EMPLEADO_ALTA", "EMPLEADO_BAJA", "ENTREGA", "DEVOLUCION",
+  "MODULO_ACTIVADO", "MODULO_DESACTIVADO",
+  "USUARIO_ALTA", "USUARIO_ROL", "USUARIO_ESTADO", "USUARIO_DESBLOQUEO",
+  "DATOS_RESTAURADOS"
+];
+const POR_PAGINA = 20;
+
+// "aaaa-mm-dd" -> Date (hora local) o null si no es una fecha válida
+function fechaLocal(valor, finDelDia) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(texto(valor));
+  if (!m) return null;
+  const [anio, mes, dia] = [Number(m[1]), Number(m[2]) - 1, Number(m[3])];
+  const d = finDelDia ? new Date(anio, mes, dia, 23, 59, 59, 999) : new Date(anio, mes, dia, 0, 0, 0, 0);
+  return d.getFullYear() === anio && d.getMonth() === mes && d.getDate() === dia ? d : null;
+}
+
+app.get("/api/auditoria", requiereAdministrador, (req, res) => {
+  const { usuario, accion, desde, hasta, q } = req.query;
+  const busqueda = texto(q).toLowerCase();
+
+  const fDesde = texto(desde) ? fechaLocal(desde, false) : null;
+  const fHasta = texto(hasta) ? fechaLocal(hasta, true) : null;
+  if ((texto(desde) && !fDesde) || (texto(hasta) && !fHasta)) {
+    return res.status(400).json({ error: "Ingresá una fecha válida." });
+  }
+  if (fDesde && fHasta && fDesde > fHasta) {
+    return res.status(400).json({ error: "La fecha Desde no puede ser posterior a Hasta." });
+  }
+
+  const filtrados = auditoria
+    .filter((r) => !texto(usuario) || r.usuario === texto(usuario))
+    .filter((r) => !texto(accion) || r.accion === texto(accion))
+    .filter((r) => !fDesde || new Date(r.fecha) >= fDesde)
+    .filter((r) => !fHasta || new Date(r.fecha) <= fHasta)
+    .filter((r) => !busqueda || r.objeto.toLowerCase().includes(busqueda) || r.detalle.toLowerCase().includes(busqueda))
+    .reverse(); // del más reciente al más antiguo
+
+  const total = filtrados.length;
+  const totalPaginas = Math.max(1, Math.ceil(total / POR_PAGINA));
+  const pedida = enteroPositivo(req.query.pagina) || 1;
+  const pagina = Math.min(pedida, totalPaginas);
+
+  res.json({
+    registros: filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA),
+    total,
+    pagina,
+    totalPaginas,
+    porPagina: POR_PAGINA,
+    usuarios: [...new Set(auditoria.map((r) => r.usuario).filter(Boolean))].sort(),
+    acciones: ACCIONES_AUDITORIA
+  });
+});
+
+// =====================================================
 // Restaurar datos de prueba (RNF-09)
 // =====================================================
 app.post("/api/test/reset", requiereAdministrador, (req, res) => {
+  const usuario = quien(req);
   resetDatos();
+  auditar(usuario, "DATOS_RESTAURADOS", "", "Se restauraron los datos iniciales de prueba.");
   res.json({ mensaje: "Datos de prueba restaurados." });
 });
 
@@ -797,10 +1129,13 @@ app.use((req, res) => {
   res.status(404).json({ error: "Recurso no encontrado." });
 });
 
-app.listen(PORT, () => {
+// Se exporta la app para los tests automatizados; solo escucha si se ejecuta directamente
+module.exports = { app, resetDatos };
+
+if (require.main === module) app.listen(PORT, () => {
   console.log("");
   console.log("====================================");
-  console.log("     GestIT V2 - Servidor iniciado");
+  console.log("     GestIT V3 - Servidor iniciado");
   console.log("====================================");
   console.log(`URL: http://localhost:${PORT}`);
   console.log("");
