@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GestIT - Usuarios</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <div class="brand-icon">IT</div>
+        <div>
+          <h1>GestIT</h1>
+          <span>Gestión de activos</span>
+        </div>
+      </div>
+      <nav id="mainNav" class="main-nav"></nav>
+    </div>
+
+    <div class="topbar-user">
+      <div class="user-info">
+        <strong id="userName">Usuario</strong>
+        <span id="userRole">Rol</span>
+      </div>
+      <button id="logoutBtn" class="btn outline" data-testid="btn-cerrar-sesion">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="page-heading">
+      <div>
+        <h2>Usuarios</h2>
+        <p>Quiénes acceden al sistema y con qué rol.</p>
+      </div>
+      <button id="nuevoUsuarioBtn" class="btn primary" data-testid="btn-nuevo-usuario">+ Nuevo usuario</button>
+    </div>
+
+    <div id="globalAlert" class="alert hidden"></div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h3>Usuarios del sistema</h3>
+          <span id="usuariosCount" data-testid="contador-usuarios">0 usuarios</span>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table data-testid="tabla-usuarios">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Nombre</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usuariosBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="usuarioModalOverlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>Nuevo usuario</h3>
+          <p>El usuario se crea Activo.</p>
+        </div>
+        <button type="button" id="cerrarUsuarioModal" class="modal-close" aria-label="Cerrar">×</button>
+      </div>
+      <form id="usuarioForm" novalidate>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="nuevoUsuario">Usuario *</label>
+            <input id="nuevoUsuario" name="usuario" type="text" autocomplete="off" data-testid="input-nuevo-usuario"
+              placeholder="minúsculas, números, . o _">
+            <div class="field-error" data-error-for="usuario" data-testid="error-nuevo-usuario"></div>
+          </div>
+          <div class="form-field">
+            <label for="nombreUsuario">Nombre *</label>
+            <input id="nombreUsuario" name="nombre" type="text" data-testid="input-nombre-usuario">
+            <div class="field-error" data-error-for="nombre" data-testid="error-nombre-usuario"></div>
+          </div>
+          <div class="form-field">
+            <label for="rolUsuario">Rol *</label>
+            <select id="rolUsuario" name="rol" data-testid="select-rol">
+              <option value="">Seleccionar...</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Operador">Operador</option>
+            </select>
+            <div class="field-error" data-error-for="rol" data-testid="error-rol"></div>
+          </div>
+          <div class="form-field">
+            <label for="nuevaPassword">Contraseña *</label>
+            <input id="nuevaPassword" name="password" type="password" autocomplete="new-password" data-testid="input-nueva-password"
+              placeholder="8 a 50, con letras y números">
+            <div class="field-error" data-error-for="password" data-testid="error-nueva-password"></div>
+          </div>
+        </div>
+        <div id="usuarioFormError" class="alert error hidden" data-testid="error-usuario-form"></div>
+        <div class="modal-actions">
+          <button type="button" id="cancelarUsuarioModal" class="btn secondary" data-testid="btn-cancelar-usuario">Cancelar</button>
+          <button type="submit" class="btn primary" data-testid="btn-crear-usuario">Crear usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/usuarios.js"></script>
+</body>
+</html>
