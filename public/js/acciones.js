@@ -104,7 +104,7 @@ function inicializarAcciones(onCambio) {
 
   const motivo = document.getElementById("motivo");
   motivo.addEventListener("input", () => {
-    document.getElementById("motivoCount").textContent = motivo.value.length;
+    document.getElementById("motivoCount").textContent = largo(motivo.value);
   });
 
   document.querySelectorAll('input[name="condicion"]').forEach((radio) =>
@@ -234,7 +234,7 @@ async function enviarCambioEstado(event) {
   errorBox.classList.add("hidden");
 
   const motivo = document.getElementById("motivo").value.trim();
-  if (motivo.length < 10 || motivo.length > 500) {
+  if (largo(motivo) < 10 || largo(motivo) > 500) {
     errorEnCampo(form, "motivo", "El motivo debe tener entre 10 y 500 caracteres.");
     return;
   }
@@ -283,7 +283,7 @@ async function enviarEntrega(event) {
     errorEnCampo(form, "empleadoId", "Seleccioná un empleado.");
     valido = false;
   }
-  if (observaciones.length > 300) {
+  if (largo(observaciones) > 300) {
     errorEnCampo(form, "observaciones", "Las observaciones admiten hasta 300 caracteres.");
     valido = false;
   }
@@ -330,7 +330,7 @@ async function enviarDevolucion(event) {
     errorEnCampo(form, "condicion", "Indicá la condición del equipo.");
     valido = false;
   }
-  if (condicion === "Con falla" && (falla.length < 10 || falla.length > 500)) {
+  if (condicion === "Con falla" && (largo(falla) < 10 || largo(falla) > 500)) {
     errorEnCampo(form, "falla", "La descripción de la falla debe tener entre 10 y 500 caracteres.");
     valido = false;
   }

@@ -177,6 +177,11 @@ function enteroPositivo(valor) {
   return null;
 }
 
+// Regla 2.4 (v3) - BUG-08: longitudes en caracteres reales (un emoji cuenta 1, no 2)
+function largo(valor) {
+  return [...valor].length;
+}
+
 function errorCampo(res, campo, mensaje, status = 400) {
   return res.status(status).json({ error: mensaje, campo });
 }
@@ -304,13 +309,13 @@ app.post("/api/equipos", requiereLogin, (req, res) => {
   const categoria = texto(req.body.categoria);
   const observaciones = texto(req.body.observaciones);
 
-  if (marca.length < 2 || marca.length > 50) {
+  if (largo(marca) < 2 || largo(marca) > 50) {
     return errorCampo(res, "marca", "La marca debe tener entre 2 y 50 caracteres.");
   }
-  if (modelo.length < 2 || modelo.length > 80) {
+  if (largo(modelo) < 2 || largo(modelo) > 80) {
     return errorCampo(res, "modelo", "El modelo debe tener entre 2 y 80 caracteres.");
   }
-  if (numeroSerie.length < 4 || numeroSerie.length > 40) {
+  if (largo(numeroSerie) < 4 || largo(numeroSerie) > 40) {
     return errorCampo(res, "numeroSerie", "El número de serie debe tener entre 4 y 40 caracteres.");
   }
   if (!/^[A-Za-z0-9-]+$/.test(numeroSerie)) {
@@ -319,7 +324,7 @@ app.post("/api/equipos", requiereLogin, (req, res) => {
   if (!CATEGORIAS.includes(categoria)) {
     return errorCampo(res, "categoria", "Seleccioná una categoría.");
   }
-  if (observaciones.length > 500) {
+  if (largo(observaciones) > 500) {
     return errorCampo(res, "observaciones", "Las observaciones admiten hasta 500 caracteres.");
   }
 
@@ -444,7 +449,7 @@ app.patch("/api/equipos/:codigo/estado", requiereLogin, (req, res) => {
   if (!TRANSICIONES_MANUALES[equipo.estado].includes(estado)) {
     return res.status(409).json({ error: `No se puede pasar de "${equipo.estado}" a "${estado}".` });
   }
-  if (motivo.length < 10 || motivo.length > 500) {
+  if (largo(motivo) < 10 || largo(motivo) > 500) {
     return errorCampo(res, "motivo", "El motivo debe tener entre 10 y 500 caracteres.");
   }
 
@@ -463,7 +468,7 @@ app.patch("/api/equipos/:codigo/baja", requiereAdministrador, (req, res) => {
   if (!TRANSICIONES_MANUALES[equipo.estado].includes("Dado de baja")) {
     return res.status(409).json({ error: `No se puede pasar de "${equipo.estado}" a "Dado de baja".` });
   }
-  if (motivo.length < 10 || motivo.length > 500) {
+  if (largo(motivo) < 10 || largo(motivo) > 500) {
     return errorCampo(res, "motivo", "El motivo debe tener entre 10 y 500 caracteres.");
   }
 
@@ -518,10 +523,10 @@ app.post("/api/empleados", requiereLogin, requiereModulo("personas"), (req, res)
   const sector = texto(req.body.sector);
   const email = texto(req.body.email);
 
-  if (nombre.length < 2 || nombre.length > 50 || !REGEX_NOMBRE.test(nombre)) {
+  if (largo(nombre) < 2 || largo(nombre) > 50 || !REGEX_NOMBRE.test(nombre)) {
     return errorCampo(res, "nombre", "El nombre debe tener entre 2 y 50 caracteres y solo letras.");
   }
-  if (apellido.length < 2 || apellido.length > 50 || !REGEX_NOMBRE.test(apellido)) {
+  if (largo(apellido) < 2 || largo(apellido) > 50 || !REGEX_NOMBRE.test(apellido)) {
     return errorCampo(res, "apellido", "El apellido debe tener entre 2 y 50 caracteres y solo letras.");
   }
   if (!/^\d{7,8}$/.test(documento)) {
@@ -530,7 +535,7 @@ app.post("/api/empleados", requiereLogin, requiereModulo("personas"), (req, res)
   if (!SECTORES.includes(sector)) {
     return errorCampo(res, "sector", "Seleccioná un sector.");
   }
-  if (email.length > 100 || !REGEX_EMAIL.test(email)) {
+  if (largo(email) > 100 || !REGEX_EMAIL.test(email)) {
     return errorCampo(res, "email", "Ingresá un email válido.");
   }
   if (empleados.some((e) => e.documento === documento)) {
@@ -590,7 +595,7 @@ app.post("/api/equipos/:codigo/entrega", requiereLogin, requiereModulo("personas
   if (!empleadoId) {
     return errorCampo(res, "empleadoId", "Seleccioná un empleado.");
   }
-  if (observaciones.length > 300) {
+  if (largo(observaciones) > 300) {
     return errorCampo(res, "observaciones", "Las observaciones admiten hasta 300 caracteres.");
   }
   if (equipo.estado !== "Disponible") {
@@ -642,7 +647,7 @@ app.post("/api/equipos/:codigo/devolucion", requiereLogin, requiereModulo("perso
   if (!["En condiciones", "Con falla"].includes(condicion)) {
     return errorCampo(res, "condicion", "Indicá la condición del equipo.");
   }
-  if (condicion === "Con falla" && (falla.length < 10 || falla.length > 500)) {
+  if (condicion === "Con falla" && (largo(falla) < 10 || largo(falla) > 500)) {
     return errorCampo(res, "falla", "La descripción de la falla debe tener entre 10 y 500 caracteres.");
   }
 

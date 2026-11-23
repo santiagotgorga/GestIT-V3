@@ -78,6 +78,11 @@ function renderHeader(activo) {
   }
 }
 
+// Regla 2.4 (v3) - BUG-08: longitudes en caracteres reales (un emoji cuenta 1, no 2)
+function largo(valor) {
+  return [...String(valor ?? "")].length;
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
