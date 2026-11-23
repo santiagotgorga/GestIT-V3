@@ -1,5 +1,5 @@
 // =====================================================
-// GestIT V2 - utilidades compartidas
+// GestIT V3 - utilidades compartidas
 // =====================================================
 const GestIT = {
   usuario: null,
@@ -56,6 +56,9 @@ function renderHeader(activo) {
   }
 
   if (esAdmin()) {
+    // HU-11 / HU-12 (v3): solo para el Administrador
+    enlaces.push(`<a href="/usuarios.html" data-testid="nav-usuarios" class="${activo === "usuarios" ? "active" : ""}">Usuarios</a>`);
+    enlaces.push(`<a href="/auditoria.html" data-testid="nav-auditoria" class="${activo === "auditoria" ? "active" : ""}">Auditoría</a>`);
     enlaces.push(`<a href="/configuracion.html" data-testid="nav-configuracion" class="${activo === "configuracion" ? "active" : ""}">Configuración</a>`);
   }
 
