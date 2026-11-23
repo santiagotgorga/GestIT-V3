@@ -144,6 +144,8 @@ function validarEquipo(datos) {
     errores.numeroSerie = "El número de serie debe tener entre 4 y 40 caracteres.";
   } else if (!/^[A-Za-z0-9-]+$/.test(datos.numeroSerie)) {
     errores.numeroSerie = "El número de serie solo admite letras, números y guiones.";
+  } else if (!/[A-Za-z0-9]/.test(datos.numeroSerie)) {
+    errores.numeroSerie = "El número de serie debe contener al menos una letra o un número.";
   }
   if (!datos.categoria) {
     errores.categoria = "Seleccioná una categoría.";

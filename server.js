@@ -321,6 +321,10 @@ app.post("/api/equipos", requiereLogin, (req, res) => {
   if (!/^[A-Za-z0-9-]+$/.test(numeroSerie)) {
     return errorCampo(res, "numeroSerie", "El número de serie solo admite letras, números y guiones.");
   }
+  if (!/[A-Za-z0-9]/.test(numeroSerie)) {
+    // HU-04 (v3) - OBS-01
+    return errorCampo(res, "numeroSerie", "El número de serie debe contener al menos una letra o un número.");
+  }
   if (!CATEGORIAS.includes(categoria)) {
     return errorCampo(res, "categoria", "Seleccioná una categoría.");
   }
