@@ -735,10 +735,26 @@ app.post("/api/test/reset", requiereAdministrador, (req, res) => {
 // =====================================================
 // Páginas
 // =====================================================
+// HU-01 (v3) - BUG-03: misma regla que el login (public/js/login.js).
+// Devuelve la ruta interna normalizada, o null si podría salir del sistema.
+function destinoSeguro(next) {
+  if (typeof next !== "string" || !next.startsWith("/")) return null;
+  if (next[1] === "/" || next[1] === "\\") return null;
+  if (/[\u0000-\u001F\u007F]/.test(next)) return null;
+  try {
+    const base = "http://gestit.local";
+    const url = new URL(next, base);
+    if (url.origin !== base) return null;
+    return url.pathname + url.search + url.hash;
+  } catch (error) {
+    return null;
+  }
+}
+
 app.get("/", (req, res) => {
-  const next = typeof req.query.next === "string" ? req.query.next : "";
-  if (req.session.usuario && next.startsWith("/") && !next.startsWith("//")) {
-    return res.redirect(next);
+  const destino = destinoSeguro(req.query.next);
+  if (req.session.usuario && destino) {
+    return res.redirect(destino);
   }
   if (req.session.usuario) {
     return res.sendFile(path.join(__dirname, "public", "dashboard.html"));
