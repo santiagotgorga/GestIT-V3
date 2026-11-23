@@ -1,5 +1,5 @@
 // =====================================================
-// GestIT V2 - acciones sobre equipos (HU-08, HU-15, HU-16)
+// GestIT V3 - acciones sobre equipos (HU-05, HU-08, HU-15, HU-16)
 // Compartido entre el listado y la ficha.
 // =====================================================
 let accionesOnCambio = async () => {};
@@ -31,6 +31,63 @@ function inicializarAcciones(onCambio) {
         <div class="modal-actions">
           <button type="button" class="btn secondary" data-cerrar="estadoModalOverlay" data-testid="btn-cancelar-estado">Cancelar</button>
           <button type="submit" class="btn primary" data-testid="btn-confirmar-estado">Confirmar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal edición (HU-05, V3) -->
+  <div id="edicionModalOverlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="edicionTitle">Editar equipo</h3>
+          <p id="edicionSubtitle" data-testid="edicion-info"></p>
+        </div>
+        <button type="button" class="modal-close" data-cerrar="edicionModalOverlay" aria-label="Cerrar">×</button>
+      </div>
+      <form id="edicionForm" novalidate>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="editMarca">Marca *</label>
+            <input id="editMarca" name="marca" type="text" data-testid="edit-marca">
+            <div class="field-error" data-error-for="marca" data-testid="error-edit-marca"></div>
+          </div>
+          <div class="form-field">
+            <label for="editModelo">Modelo *</label>
+            <input id="editModelo" name="modelo" type="text" data-testid="edit-modelo">
+            <div class="field-error" data-error-for="modelo" data-testid="error-edit-modelo"></div>
+          </div>
+          <div class="form-field">
+            <label for="editSerie">Número de serie *</label>
+            <input id="editSerie" name="numeroSerie" type="text" data-testid="edit-serie">
+            <div class="field-error" data-error-for="numeroSerie" data-testid="error-edit-serie"></div>
+          </div>
+          <div class="form-field">
+            <label for="editCategoria">Categoría *</label>
+            <select id="editCategoria" name="categoria" data-testid="edit-categoria">
+              <option value="">Seleccionar...</option>
+              <option value="Notebook">Notebook</option>
+              <option value="PC">PC</option>
+              <option value="Monitor">Monitor</option>
+              <option value="Impresora">Impresora</option>
+              <option value="Celular">Celular</option>
+              <option value="Tablet">Tablet</option>
+              <option value="Otro">Otro</option>
+            </select>
+            <div class="field-error" data-error-for="categoria" data-testid="error-edit-categoria"></div>
+          </div>
+        </div>
+        <div class="form-field" style="margin-top:14px">
+          <label for="editObservaciones">Observaciones</label>
+          <textarea id="editObservaciones" name="observaciones" data-testid="edit-observaciones"
+            placeholder="Opcional, hasta 500 caracteres"></textarea>
+          <div class="field-error" data-error-for="observaciones" data-testid="error-edit-observaciones"></div>
+        </div>
+        <div id="edicionError" class="alert error hidden" data-testid="error-edicion"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" data-cerrar="edicionModalOverlay" data-testid="btn-cancelar-edicion">Cancelar</button>
+          <button type="submit" class="btn primary" data-testid="btn-guardar-edicion">Guardar cambios</button>
         </div>
       </form>
     </div>
@@ -115,6 +172,7 @@ function inicializarAcciones(onCambio) {
   );
 
   document.getElementById("estadoForm").addEventListener("submit", enviarCambioEstado);
+  document.getElementById("edicionForm").addEventListener("submit", enviarEdicion);
   document.getElementById("entregaForm").addEventListener("submit", enviarEntrega);
   document.getElementById("devolucionForm").addEventListener("submit", enviarDevolucion);
 
@@ -154,6 +212,11 @@ function renderAccionesEquipo(equipo) {
     if (personas) botones.push(botonAccion(equipo, "devolucion", "Registrar devolución", "primary"));
   }
 
+  // HU-05 (v3): cualquier equipo que no esté dado de baja se puede editar (ambos roles)
+  if (equipo.estado !== "Dado de baja") {
+    botones.push(botonAccion(equipo, "editar", "Editar", "outline"));
+  }
+
   if (botones.length === 0) {
     return `<span class="no-action" data-testid="sin-acciones-${equipo.codigo}">Sin acciones</span>`;
   }
@@ -182,6 +245,31 @@ async function abrirAccion(codigo, accion, descripcion, estadoActual) {
       `${descripcion}: ${estadoActual} → ${DESTINO_ACCION[accion]}`;
     document.getElementById("estadoModalOverlay").classList.remove("hidden");
     document.getElementById("motivo").focus();
+    return;
+  }
+
+  if (accion === "editar") {
+    const form = document.getElementById("edicionForm");
+    limpiarErrores(form);
+    form.reset();
+    document.getElementById("edicionError").classList.add("hidden");
+
+    const { ok, data } = await api(`/api/equipos/${codigo}`);
+    if (!ok) {
+      mostrarAlerta(data.error || "No se pudo cargar el equipo.", "error");
+      return;
+    }
+
+    document.getElementById("edicionTitle").textContent = `Editar equipo ${data.codigo}`;
+    document.getElementById("edicionSubtitle").textContent =
+      `Código ${data.codigo} · Estado: ${data.estado} (no editables)`;
+    document.getElementById("editMarca").value = data.marca;
+    document.getElementById("editModelo").value = data.modelo;
+    document.getElementById("editSerie").value = data.numeroSerie;
+    document.getElementById("editCategoria").value = data.categoria;
+    document.getElementById("editObservaciones").value = data.observaciones || "";
+    document.getElementById("edicionModalOverlay").classList.remove("hidden");
+    document.getElementById("editMarca").focus();
     return;
   }
 
@@ -357,5 +445,78 @@ async function enviarDevolucion(event) {
     "success",
     true
   );
+  await accionesOnCambio();
+}
+
+// HU-05 (v3): mismas validaciones que el alta (HU-04)
+function validarDatosEquipo(datos) {
+  const errores = {};
+
+  if (largo(datos.marca) < 2 || largo(datos.marca) > 50) {
+    errores.marca = "La marca debe tener entre 2 y 50 caracteres.";
+  }
+  if (largo(datos.modelo) < 2 || largo(datos.modelo) > 80) {
+    errores.modelo = "El modelo debe tener entre 2 y 80 caracteres.";
+  }
+  if (largo(datos.numeroSerie) < 4 || largo(datos.numeroSerie) > 40) {
+    errores.numeroSerie = "El número de serie debe tener entre 4 y 40 caracteres.";
+  } else if (!/^[A-Za-z0-9-]+$/.test(datos.numeroSerie)) {
+    errores.numeroSerie = "El número de serie solo admite letras, números y guiones.";
+  } else if (!/[A-Za-z0-9]/.test(datos.numeroSerie)) {
+    errores.numeroSerie = "El número de serie debe contener al menos una letra o un número.";
+  }
+  if (!datos.categoria) {
+    errores.categoria = "Seleccioná una categoría.";
+  }
+  if (largo(datos.observaciones) > 500) {
+    errores.observaciones = "Las observaciones admiten hasta 500 caracteres.";
+  }
+
+  return errores;
+}
+
+async function enviarEdicion(event) {
+  event.preventDefault();
+  if (!accionEnCurso) return;
+
+  const form = event.target;
+  limpiarErrores(form);
+  const errorBox = document.getElementById("edicionError");
+  errorBox.classList.add("hidden");
+
+  const datos = {
+    marca: document.getElementById("editMarca").value.trim(),
+    modelo: document.getElementById("editModelo").value.trim(),
+    numeroSerie: document.getElementById("editSerie").value.trim(),
+    categoria: document.getElementById("editCategoria").value,
+    observaciones: document.getElementById("editObservaciones").value.trim()
+  };
+
+  const errores = validarDatosEquipo(datos);
+  if (Object.keys(errores).length > 0) {
+    Object.entries(errores).forEach(([campo, mensaje]) => errorEnCampo(form, campo, mensaje));
+    return;
+  }
+
+  const { ok, data } = await api(`/api/equipos/${accionEnCurso.codigo}`, { method: "PATCH", body: datos });
+
+  if (!ok) {
+    if (data.campo) {
+      errorEnCampo(form, data.campo, data.error);
+    } else {
+      errorBox.textContent = data.error || "No se pudo guardar el equipo.";
+      errorBox.classList.remove("hidden");
+    }
+    return;
+  }
+
+  if (data.cambios.length === 0) {
+    errorBox.textContent = data.mensaje; // "No hay cambios para guardar."
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  cerrarOverlay("edicionModalOverlay");
+  mostrarAlerta(data.mensaje, "success");
   await accionesOnCambio();
 }
