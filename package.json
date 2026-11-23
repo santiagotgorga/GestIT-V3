@@ -1,15 +1,23 @@
 {
   "name": "gestit",
-  "version": "2.0.0",
-  "description": "GestIT - Gestion de activos de IT (V2)",
+  "version": "3.0.0",
+  "description": "GestIT - Gestion de activos de IT (V3)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "test": "mocha",
+    "test:ver": "mocha",
+    "test:reporte": "mocha --reporter mochawesome --reporter-options reportDir=reportes,reportFilename=reporte-regresion,reportTitle=GestIT_V3_-_Regresion_automatizada,charts=true,inline=true"
   },
   "dependencies": {
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "mocha": "^10.8.2",
+    "mochawesome": "^7.1.4",
+    "selenium-webdriver": "^4.54.0"
   }
 }
