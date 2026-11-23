@@ -348,7 +348,9 @@ app.get("/api/equipos/export", requiereLogin, requiereModulo("identificacion"), 
   }
 
   const celda = (valor) => {
-    const s = String(valor ?? "");
+    let s = String(valor ?? "");
+    // HU-19 (v3) - BUG-04: evita que Excel interprete el valor como fórmula
+    if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
     return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
 
