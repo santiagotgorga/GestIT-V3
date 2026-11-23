@@ -249,7 +249,9 @@ function filtrarEquipos({ q, categoria, estado, incluirBajas }) {
 // Autenticación (HU-01, HU-02)
 // =====================================================
 app.post("/api/login", (req, res) => {
-  const { usuario, password } = req.body;
+  // HU-01 (v3) - BUG-07: el servidor recorta los espacios del usuario igual que la pantalla
+  const usuario = texto(req.body.usuario);
+  const password = typeof req.body.password === "string" ? req.body.password : "";
 
   if (!usuario || !password) {
     return res.status(400).json({ error: "Ingresá usuario y contraseña." });
