@@ -2,7 +2,7 @@
 
 Testing de Aplicaciones · UADE · Grupo 12
 
-> **Estado: BORRADOR para revisión del grupo.** Los campos siguen la hoja "Defect Report - Template" de la
+> **Estado: corregidos en V3 (un commit por defecto en la rama `v3`). Falta el testing de confirmación (TC‑49 a TC‑56).** Los campos siguen la hoja "Defect Report - Template" de la
 > plantilla del grupo, con los mismos agregados que BUG‑01 (Root cause, Confirmation testing, Status).
 > Después se pasan a la planilla Excel.
 
@@ -36,7 +36,7 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑01 (regla "Cambio en V2 (redirección ?next=)"; el criterio 7 solo probaba `//sitio-externo.com`). |
 | **Root cause** | Validación incompleta en el código (`public/js/login.js`): se compara texto (`startsWith`) en vez de interpretar la URL como lo hace el navegador. También faltaba un criterio de aceptación con variantes (`\`, tabulación, `https:`). |
 | **Confirmation testing (V3)** | HU‑01 (v3) criterios 8, 9 y 10 (casos de confirmación nuevos). |
-| **Status** | Abierto → a corregir en V3. |
+| **Status** | Corregido en V3 → pendiente de confirmación por QA. |
 | **Browsers tested** | Chromium 157 |
 | **Environment** | Entorno local (localhost:3000) |
 | **Notes** | Variantes probadas: `/equipo.html?codigo=EQ-00002` → OK (ficha); `//example.com` → OK (listado); `/\example.com` → **FALLA**; `/%09/example.com` → **FALLA**. |
@@ -55,7 +55,7 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑01 (regla de `?next=`), HU‑18 (acceso por QR). |
 | **Root cause** | Código duplicado: la regla de `next` se implementó dos veces (navegador y servidor), con el mismo error en las dos. |
 | **Confirmation testing (V3)** | HU‑01 (v3) criterio 11. |
-| **Status** | Abierto → a corregir en V3. |
+| **Status** | Corregido en V3 → pendiente de confirmación por QA. |
 | **Browsers tested** | Chromium 157 · curl |
 | **Environment** | Entorno local (localhost:3000) |
 | **Notes** | Conviene corregirlo junto con BUG‑02, con una sola función de validación compartida. |
@@ -74,7 +74,7 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑19 (exportación CSV), HU‑04 (alta). |
 | **Root cause** | Requerimiento incompleto: HU‑19 definía el escape de comas y comillas, pero no el riesgo de fórmulas. |
 | **Confirmation testing (V3)** | HU‑19 (v3) criterio 5. |
-| **Status** | Abierto → a corregir en V3. |
+| **Status** | Corregido en V3 → pendiente de confirmación por QA. |
 | **Browsers tested** | Chromium 157 · curl |
 | **Environment** | Entorno local (localhost:3000) |
 | **Notes** | Referencia: OWASP "CSV Injection". |
@@ -93,7 +93,7 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑15, regla 2.4. |
 | **Root cause** | Validación débil en el código: conversión implícita de tipos de JavaScript. |
 | **Confirmation testing (V3)** | HU‑15 (v3) criterio 6. |
-| **Status** | Abierto → a corregir en V3. |
+| **Status** | Corregido en V3 → pendiente de confirmación por QA. |
 | **Browsers tested** | curl |
 | **Environment** | Entorno local (localhost:3000) |
 | **Notes** | Encontrado con la técnica de *predicción de errores* (tipos inesperados). |
@@ -112,7 +112,7 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑01, HU‑11 (pendiente desde V1). |
 | **Root cause** | Requerimiento faltante: ninguna HU de V1/V2 definía un límite de intentos. |
 | **Confirmation testing (V3)** | HU‑01 (v3) criterios 13 a 15 y HU‑11 criterio 7. |
-| **Status** | Abierto → a corregir en V3. |
+| **Status** | Corregido en V3 → pendiente de confirmación por QA. |
 | **Browsers tested** | curl |
 | **Environment** | Entorno local (localhost:3000) |
 | **Notes** | Discutible si es defecto o mejora (no estaba especificado). Lo tratamos como defecto de seguridad porque la HU‑01 busca "acceder únicamente a las funciones que me corresponden". |
@@ -131,7 +131,7 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑01 (tabla de campos), regla 2.4. |
 | **Root cause** | Inconsistencia entre la validación del navegador y la del servidor. |
 | **Confirmation testing (V3)** | HU‑01 (v3) criterio 12. |
-| **Status** | Abierto → a corregir en V3. |
+| **Status** | Corregido en V3 → pendiente de confirmación por QA. |
 | **Browsers tested** | curl |
 | **Environment** | Entorno local (localhost:3000) |
 | **Notes** | — |
@@ -150,7 +150,7 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑04 (y todo campo con límite de longitud: HU‑08, HU‑13, HU‑15, HU‑16). |
 | **Root cause** | Código: se usa `.length` en lugar de contar caracteres. Encontrado con valores límite combinados con particiones de caracteres no ASCII. |
 | **Confirmation testing (V3)** | HU‑04 (v3) criterio 8. |
-| **Status** | Abierto → a corregir en V3. |
+| **Status** | Corregido en V3 → pendiente de confirmación por QA. |
 | **Browsers tested** | Chromium 157 · curl |
 | **Environment** | Entorno local (localhost:3000) |
 | **Notes** | — |

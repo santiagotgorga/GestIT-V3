@@ -3,7 +3,7 @@
 Testing de Aplicaciones · UADE · Grupo 12
 Integrantes: Juan Ignacio Rua · Santiago Gorga · Santino Defilippo · Matias Sosa
 
-> **Estado: BORRADOR para revisión del grupo.** Mismo formato que el documento de V2:
+> **Estado: implementado en V3 (rama `v3`). Revisión del grupo pendiente.** Mismo formato que el documento de V2:
 > Historia · Pantalla / UI · Campos · Reglas · Criterios de aceptación (Dado / Cuando / Entonces).
 
 ---
@@ -177,8 +177,8 @@ Como Administrador, quiero gestionar quiénes acceden y con qué rol, para contr
 - Menú "Usuarios" (`nav-usuarios`), solo para el Administrador. Abre la página `/usuarios.html`. Un Operador que
   escribe la URL es redirigido al listado de equipos.
 - Tabla (`tabla-usuarios`) con las columnas Usuario, Nombre, Rol, Estado (Activo / Inactivo / Bloqueado) y
-  Acciones:
-  - "Cambiar rol" (`btn-rol-{usuario}`),
+  Acciones (en la fila propia se muestra "Tu usuario" sin botones):
+  - "Pasar a Administrador" / "Pasar a Operador" (`btn-rol-{usuario}`),
   - "Desactivar" / "Activar" (`btn-estado-{usuario}`),
   - "Desbloquear" (`btn-desbloquear-{usuario}`), solo si está bloqueado.
 - Botón "+ Nuevo usuario" (`btn-nuevo-usuario`), que abre un modal con "Cancelar" y "Crear usuario"
@@ -223,7 +223,8 @@ Como Administrador, quiero gestionar quiénes acceden y con qué rol, para contr
    mayúscula) → error.
 3. Dado la contraseña "clave12" (7) → error; "clave123" (8) → válido; "clavelarga" (sin números) → error;
    "12345678" (sin letras) → error.
-4. Dado el usuario `ADMIN` (ya existe `admin`), cuando confirmo, entonces "Ya existe un usuario con ese nombre."
+4. Dado el usuario `admin` (ya existe), cuando confirmo, entonces "Ya existe un usuario con ese nombre." La
+   comparación ignora mayúsculas (si por API llega `ADMIN`, ya falla antes por formato: solo minúsculas).
 5. Dado el Administrador `admin` como único Administrador, cuando intenta pasarse a Operador o desactivarse,
    entonces 409 y sigue igual.
 6. Dado que desactivo a `operador`, cuando `operador` intenta ingresar, entonces "Usuario o contraseña
