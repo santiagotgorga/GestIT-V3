@@ -32,6 +32,10 @@
     "TC-56": {
       "estado": "PASS",
       "obtenido": "Serie \"----\" → \"El número de serie debe contener al menos una letra o un número.\" y no se creó. Serie \"A----\" → se creó EQ-00007."
+    },
+    "TC-57": {
+      "estado": "PASS",
+      "obtenido": "4 intentos fallidos con operador / x → \"Usuario o contraseña incorrectos.\". Login correcto con operador123 → ingresó. 4 intentos fallidos más → errores normales, sin bloqueo: el contador se reinició."
     }
   }
 }
