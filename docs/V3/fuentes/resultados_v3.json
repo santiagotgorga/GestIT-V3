@@ -84,6 +84,10 @@
     "TC-69": {
       "estado": "PASS",
       "obtenido": "La fila de admin en Usuarios dice \"Tu usuario\", sin botones. admin intentando pasarse a Operador por API → HTTP 409 \"No podés modificar tu propio rol o estado.\". Se creó un segundo Administrador (admin3; un primer intento con admin2 no permitió el login, probablemente por un error de tipeo en la contraseña al crearlo). admin3 pasa a admin a Operador → HTTP 200. admin3 intentando desactivarse → HTTP 409 \"No podés modificar tu propio rol o estado.\""
+    },
+    "TC-70": {
+      "estado": "PASS",
+      "obtenido": "Navegador A (admin) desactiva a operador → Inactivo. Navegador B (operador con sesión abierta) recarga → vuelve al login. Login de operador → \"Usuario o contraseña incorrectos.\". A reactiva a operador → B ingresa al listado."
     }
   }
 }
