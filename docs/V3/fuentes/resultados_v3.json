@@ -36,6 +36,10 @@
     "TC-57": {
       "estado": "PASS",
       "obtenido": "4 intentos fallidos con operador / x → \"Usuario o contraseña incorrectos.\". Login correcto con operador123 → ingresó. 4 intentos fallidos más → errores normales, sin bloqueo: el contador se reinició."
+    },
+    "TC-58": {
+      "estado": "PASS",
+      "obtenido": "10 intentos con juan / x por API → las 10 respuestas: HTTP 401 \"Usuario o contraseña incorrectos.\"; nunca el mensaje de bloqueo (423)."
     }
   }
 }
