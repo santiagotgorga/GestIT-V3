@@ -24,6 +24,10 @@
     "TC-54": {
       "estado": "PASS",
       "obtenido": "POST /api/login con {\"usuario\":\" admin \",\"password\":\"admin123\"} → HTTP 200 \"Login correcto.\" (usuario admin, rol Administrador)."
+    },
+    "TC-55": {
+      "estado": "PASS",
+      "obtenido": "Marca de 30 emojis → se creó EQ-00006. Marca de 51 emojis → \"La marca debe tener entre 2 y 50 caracteres.\" y no se creó. Observación (usabilidad): una marca larga sin espacios estira la columna y el listado necesita scroll horizontal."
     }
   }
 }
