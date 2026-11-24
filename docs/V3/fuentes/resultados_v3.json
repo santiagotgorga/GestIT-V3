@@ -16,6 +16,10 @@
     "TC-52": {
       "estado": "PASS",
       "obtenido": "empleadoId true, \"0x2\", 1.5 y \"2abc\" → HTTP 400 \"Seleccioná un empleado.\"; EQ-00002 siguió Disponible. Con empleadoId 2 → HTTP 201, acta AE-000002, EQ-00002 Asignado a Pérez, Carlos."
+    },
+    "TC-53": {
+      "estado": "PASS",
+      "obtenido": "Intentos 1 a 4 con operador / x → \"Usuario o contraseña incorrectos.\". 5.º intento → \"Usuario bloqueado por intentos fallidos. Intentá más tarde o contactá a un Administrador.\". Con la contraseña correcta (operador123) → mismo mensaje de bloqueo; no ingresa."
     }
   }
 }
