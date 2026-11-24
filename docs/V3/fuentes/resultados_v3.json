@@ -124,6 +124,10 @@
     "TC-79": {
       "estado": "PASS",
       "obtenido": "Desde = Hasta = 24/11/2026 → los 4 registros del día (límites inclusivos). Desde 25/11 y Hasta 24/11 → \"La fecha Desde no puede ser posterior a Hasta.\". Observación (usabilidad): junto al error, la pantalla sigue mostrando el resultado anterior (\"0 registros\" y \"No hay registros de auditoría con los filtros aplicados.\"), que no corresponde a los filtros actuales."
+    },
+    "TC-80": {
+      "estado": "PASS",
+      "obtenido": "Como admin por API: DELETE /api/auditoria → HTTP 404; PATCH /api/auditoria/1 → HTTP 404. En la pantalla de Auditoría los registros siguen intactos (solo se agregó el LOGIN_OK del login por API)."
     }
   }
 }
