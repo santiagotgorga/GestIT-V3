@@ -68,6 +68,10 @@
     "TC-65": {
       "estado": "PASS",
       "obtenido": "Admin crea tecnico1 (nombre ingresado: \"Tecnico uno\", rol Operador, clave1234) → \"Usuario tecnico1 creado correctamente.\", Activo. Login con tecnico1 / clave1234 → entra al listado; el encabezado muestra \"Tecnico uno\" / \"Operador\" y solo los menús de Operador (Equipos, Empleados)."
+    },
+    "TC-66": {
+      "estado": "PASS",
+      "obtenido": "Usuario \"ab\" → error de formato/longitud. \"abc\" → se crea. 20 caracteres → se crea. 21 caracteres → error. \"Tecnico\" (mayúscula) → \"El usuario debe tener entre 3 y 20 caracteres (minúsculas, números, . o _).\""
     }
   }
 }
