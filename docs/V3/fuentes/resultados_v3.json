@@ -28,6 +28,10 @@
     "TC-55": {
       "estado": "PASS",
       "obtenido": "Marca de 30 emojis → se creó EQ-00006. Marca de 51 emojis → \"La marca debe tener entre 2 y 50 caracteres.\" y no se creó. Observación (usabilidad): una marca larga sin espacios estira la columna y el listado necesita scroll horizontal."
+    },
+    "TC-56": {
+      "estado": "PASS",
+      "obtenido": "Serie \"----\" → \"El número de serie debe contener al menos una letra o un número.\" y no se creó. Serie \"A----\" → se creó EQ-00007."
     }
   }
 }
