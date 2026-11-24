@@ -104,6 +104,10 @@
     "TC-74": {
       "estado": "PASS",
       "obtenido": "Operador crea EQ-00006 (Lenovo Thinkpad L15, PF-56743, Notebook). En Auditoría (admin), primer registro: EQUIPO_ALTA · operador · EQ-00006 · \"Lenovo Thinkpad L15 · Serie PF-56743 · Notebook\"; debajo, LOGIN_OK de admin y de operador."
+    },
+    "TC-75": {
+      "estado": "PASS",
+      "obtenido": "Login con admin / admin999 → \"Usuario o contraseña incorrectos.\". En Auditoría: LOGIN_FALLIDO · admin · objeto admin · detalle \"Usuario o contraseña incorrectos.\"; la contraseña no aparece. También quedó registrado el LOGOUT de operador."
     }
   }
 }
