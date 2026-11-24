@@ -92,6 +92,10 @@
     "TC-71": {
       "estado": "PASS",
       "obtenido": "5 intentos fallidos de operador → bloqueado. En Usuarios (admin), operador aparece \"Bloqueado\" con el botón Desbloquear. Desbloquear → \"Usuario operador desbloqueado.\", estado Activo. operador / operador123 → ingresa."
+    },
+    "TC-72": {
+      "estado": "PASS",
+      "obtenido": "Operador: sin \"Usuarios\" en el menú; /usuarios.html redirige al listado; GET /api/usuarios → HTTP 403. Admin: GET /api/usuarios → HTTP 200 con admin y operador (id, usuario, nombre, rol, activo, bloqueado), sin campo password."
     }
   }
 }
