@@ -56,6 +56,10 @@
     "TC-62": {
       "estado": "PASS",
       "obtenido": "Admin da de baja EQ-00003. Con \"Incluir dados de baja\", la fila de EQ-00003 dice \"Sin acciones\" (no aparece Editar). PATCH /api/equipos/EQ-00003 → HTTP 409 \"No se puede editar un equipo dado de baja.\""
+    },
+    "TC-63": {
+      "estado": "PASS",
+      "obtenido": "PATCH /api/equipos/EQ-00004 con {estado: Disponible, codigo: EQ-99999, marca: Dell} → HTTP 200; cambios: solo marca HP → Dell. EQ-00004 sigue En reparación y con el código EQ-00004 (verificado en el listado)."
     }
   }
 }
