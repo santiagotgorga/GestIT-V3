@@ -40,6 +40,10 @@
     "TC-58": {
       "estado": "PASS",
       "obtenido": "10 intentos con juan / x por API → las 10 respuestas: HTTP 401 \"Usuario o contraseña incorrectos.\"; nunca el mensaje de bloqueo (423)."
+    },
+    "TC-59": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00001: modal con datos precargados; Modelo → Latitude 5430 → \"Equipo EQ-00001 actualizado correctamente.\". Ficha: Dell Latitude 5430, código EQ-00001 y estado Disponible sin cambios; el historial de estados sigue con una sola fila (Alta del equipo)."
     }
   }
 }
