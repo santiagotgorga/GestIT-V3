@@ -20,6 +20,10 @@
     "TC-53": {
       "estado": "PASS",
       "obtenido": "Intentos 1 a 4 con operador / x → \"Usuario o contraseña incorrectos.\". 5.º intento → \"Usuario bloqueado por intentos fallidos. Intentá más tarde o contactá a un Administrador.\". Con la contraseña correcta (operador123) → mismo mensaje de bloqueo; no ingresa."
+    },
+    "TC-54": {
+      "estado": "PASS",
+      "obtenido": "POST /api/login con {\"usuario\":\" admin \",\"password\":\"admin123\"} → HTTP 200 \"Login correcto.\" (usuario admin, rol Administrador)."
     }
   }
 }
