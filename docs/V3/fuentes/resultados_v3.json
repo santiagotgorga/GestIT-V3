@@ -12,6 +12,10 @@
     "TC-51": {
       "estado": "PASS",
       "obtenido": "Bloc de notas: la marca se exporta como '=HYPERLINK(...) (con apóstrofo adelante). Excel: no se ejecuta ninguna fórmula; después de 'Texto en columnas' por coma, la celda de la marca se ve como texto plano. Observación: al abrir el CSV con doble clic, Excel (configuración regional de Argentina) deja toda la fila en la columna A porque espera punto y coma; se reportó como BUG-09."
+    },
+    "TC-52": {
+      "estado": "PASS",
+      "obtenido": "empleadoId true, \"0x2\", 1.5 y \"2abc\" → HTTP 400 \"Seleccioná un empleado.\"; EQ-00002 siguió Disponible. Con empleadoId 2 → HTTP 201, acta AE-000002, EQ-00002 Asignado a Pérez, Carlos."
     }
   }
 }
