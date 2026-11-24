@@ -116,6 +116,10 @@
     "TC-77": {
       "estado": "PASS",
       "obtenido": "Con 20 registros: \"Página 1 de 1 · 20 registros\" y Siguiente deshabilitado. Con un alta más: \"Página 1 de 2 · 21 registros\", 20 filas. Siguiente → página 2 con una sola fila (LOGIN_OK, el registro más antiguo)."
+    },
+    "TC-78": {
+      "estado": "PASS",
+      "obtenido": "Entregas: operador EQ-00001 (AE-000002) y admin EQ-00002 (AE-000003). Acción = ENTREGA → 2 registros. + Usuario = operador → 1 registro (AE-000002). Usuario = operador solo → ENTREGA y LOGIN_OK. Buscar \"zzz\" → \"No hay registros de auditoría con los filtros aplicados.\". Limpiar filtros → vuelven todos los registros."
     }
   }
 }
