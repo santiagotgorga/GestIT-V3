@@ -64,6 +64,10 @@
     "TC-64": {
       "estado": "PASS",
       "obtenido": "Editar EQ-00001 y Guardar cambios sin modificar nada → \"No hay cambios para guardar.\"; el modal queda abierto. Observación (usabilidad): el mensaje se muestra con estilo de error (rojo) aunque es informativo."
+    },
+    "TC-65": {
+      "estado": "PASS",
+      "obtenido": "Admin crea tecnico1 (nombre ingresado: \"Tecnico uno\", rol Operador, clave1234) → \"Usuario tecnico1 creado correctamente.\", Activo. Login con tecnico1 / clave1234 → entra al listado; el encabezado muestra \"Tecnico uno\" / \"Operador\" y solo los menús de Operador (Equipos, Empleados)."
     }
   }
 }
