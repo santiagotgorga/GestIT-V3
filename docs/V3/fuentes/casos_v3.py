@@ -3,7 +3,7 @@
 
 PRE_OP = "Usuario logueado como Operador (operador / operador123)."
 PRE_ADMIN = "Usuario logueado como Administrador (admin / admin123)."
-PRE_RESET = "Datos de prueba restaurados (POST /api/test/reset)."
+PRE_RESET = "Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset)."
 
 CASOS = [
     # ---------------- Confirmación de defectos de V2 ----------------
@@ -239,11 +239,13 @@ CASOS = [
          ]),
     dict(id="TC-77", desc="Paginación de 20 registros (20 y 21).",
          hu="HU-12", prioridad="Normal", tipo="Nuevo V3", tecnica="Valores límite (20 / 21 registros)",
-         pre=[PRE_RESET, PRE_ADMIN], datos=["19 altas de equipos (por API o pantalla)"],
+         pre=["Servidor recién iniciado (o datos restaurados).", PRE_ADMIN],
+         datos=["Altas de equipos hasta llegar a 20 y a 21 registros (Marca Dell, Modelo Mod, Serie PAG-01, PAG-02…)"],
          pasos=[
-             ("Después del reset e ingreso (2 registros), crear 18 equipos y abrir Auditoría.", "\"Página 1 de 1 · 20 registros\"; Siguiente deshabilitado."),
-             ("Crear 1 equipo más y recargar.", "\"Página 1 de 2 · 21 registros\"; 20 filas."),
-             ("Hacer clic en Siguiente.", "\"Página 2 de 2\"; 1 fila (DATOS_RESTAURADOS)."),
+             ("Abrir Auditoría y anotar el total de registros (N, se ve en \"Página 1 de 1 · N registros\").", "N < 20 (al iniciar hay 1 o 2 registros)."),
+             ("Crear 20 − N equipos y recargar Auditoría.", "\"Página 1 de 1 · 20 registros\"; el botón Siguiente está deshabilitado."),
+             ("Crear 1 equipo más y recargar.", "\"Página 1 de 2 · 21 registros\"; la tabla muestra 20 filas."),
+             ("Hacer clic en Siguiente.", "\"Página 2 de 2 · 21 registros\"; 1 fila: el registro más antiguo."),
          ]),
     dict(id="TC-78", desc="Filtros combinados de acción y usuario.",
          hu="HU-12", prioridad="Normal", tipo="Nuevo V3", tecnica="Tabla de decisión (filtros)",

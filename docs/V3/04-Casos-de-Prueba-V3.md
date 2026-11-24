@@ -54,7 +54,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-01 · **Prioridad:** High · **Tipo:** Confirmación
 - **Técnica de diseño:** Predicción de errores (variantes de URL)
-- **Prerrequisitos:** Sin sesión iniciada. Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Sin sesión iniciada. Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `next = /\example.com` · `next = /%09/example.com` · `next = https://example.com` · `next = javascript:alert(1)`
 
 | Paso | Acción | Resultado esperado |
@@ -108,7 +108,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-01, HU-11 · **Prioridad:** High · **Tipo:** Confirmación
 - **Técnica de diseño:** Valores límite (4, 5 y 6 intentos)
-- **Prerrequisitos:** Sin sesión iniciada. Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Sin sesión iniciada. Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `Usuario = operador` · `Contraseña incorrecta = x` · `Contraseña correcta = operador123`
 
 | Paso | Acción | Resultado esperado |
@@ -156,7 +156,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-01 · **Prioridad:** Normal · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Transición de estados (contador)
-- **Prerrequisitos:** Sin sesión iniciada. Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Sin sesión iniciada. Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `Usuario = operador`
 
 | Paso | Acción | Resultado esperado |
@@ -180,7 +180,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-05 · **Prioridad:** High · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Caso de uso (flujo principal)
-- **Prerrequisitos:** Usuario logueado como Operador (operador / operador123). Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Usuario logueado como Operador (operador / operador123). Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `Equipo = EQ-00001` · `Modelo nuevo = Latitude 5430`
 
 | Paso | Acción | Resultado esperado |
@@ -193,7 +193,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-05 · **Prioridad:** High · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Partición de equivalencias + predicción de errores
-- **Prerrequisitos:** Usuario logueado como Operador (operador / operador123). Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Usuario logueado como Operador (operador / operador123). Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `Equipo = EQ-00001 (serie DL001)` · `Serie LN001 (de EQ-00002)` · `Serie " ln001 "` · `Serie DL001 (propia)`
 
 | Paso | Acción | Resultado esperado |
@@ -206,7 +206,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-05 · **Prioridad:** Normal · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Valores límite
-- **Prerrequisitos:** Usuario logueado como Operador (operador / operador123). Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Usuario logueado como Operador (operador / operador123). Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `Equipo = EQ-00002` · `Marca = 1, 2, 50 y 51 caracteres`
 
 | Paso | Acción | Resultado esperado |
@@ -255,7 +255,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-11 · **Prioridad:** High · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Caso de uso (flujo principal)
-- **Prerrequisitos:** Usuario logueado como Administrador (admin / admin123). Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Usuario logueado como Administrador (admin / admin123). Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `Usuario = tecnico1` · `Nombre = Técnico Uno` · `Rol = Operador` · `Contraseña = clave1234`
 
 | Paso | Acción | Resultado esperado |
@@ -308,7 +308,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-11 · **Prioridad:** High · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Tabla de decisión (es uno mismo × admins activos)
-- **Prerrequisitos:** Usuario logueado como Administrador (admin / admin123). Cookie de sesión disponible para llamar a la API. Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Usuario logueado como Administrador (admin / admin123). Cookie de sesión disponible para llamar a la API. Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `Usuario objetivo = admin (único Administrador)`
 
 | Paso | Acción | Resultado esperado |
@@ -375,7 +375,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-12, HU-04 · **Prioridad:** High · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Caso de uso
-- **Prerrequisitos:** Datos de prueba restaurados (POST /api/test/reset). Navegador A con operador; navegador B con admin.
+- **Prerrequisitos:** Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset). Navegador A con operador; navegador B con admin.
 - **Datos de prueba:** `Equipo nuevo = Lenovo ThinkPad L15 PF-56743 Notebook`
 
 | Paso | Acción | Resultado esperado |
@@ -387,7 +387,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-12, HU-01 · **Prioridad:** High · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Predicción de errores (datos sensibles)
-- **Prerrequisitos:** Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `admin / admin999`
 
 | Paso | Acción | Resultado esperado |
@@ -412,20 +412,21 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-12 · **Prioridad:** Normal · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Valores límite (20 / 21 registros)
-- **Prerrequisitos:** Datos de prueba restaurados (POST /api/test/reset). Usuario logueado como Administrador (admin / admin123).
-- **Datos de prueba:** `19 altas de equipos (por API o pantalla)`
+- **Prerrequisitos:** Servidor recién iniciado (o datos restaurados). Usuario logueado como Administrador (admin / admin123).
+- **Datos de prueba:** `Altas de equipos hasta llegar a 20 y a 21 registros (Marca Dell, Modelo Mod, Serie PAG-01, PAG-02…)`
 
 | Paso | Acción | Resultado esperado |
 |---|---|---|
-| 1 | Después del reset e ingreso (2 registros), crear 18 equipos y abrir Auditoría. | "Página 1 de 1 · 20 registros"; Siguiente deshabilitado. |
-| 2 | Crear 1 equipo más y recargar. | "Página 1 de 2 · 21 registros"; 20 filas. |
-| 3 | Hacer clic en Siguiente. | "Página 2 de 2"; 1 fila (DATOS_RESTAURADOS). |
+| 1 | Abrir Auditoría y anotar el total de registros (N, se ve en "Página 1 de 1 · N registros"). | N < 20 (al iniciar hay 1 o 2 registros). |
+| 2 | Crear 20 − N equipos y recargar Auditoría. | "Página 1 de 1 · 20 registros"; el botón Siguiente está deshabilitado. |
+| 3 | Crear 1 equipo más y recargar. | "Página 1 de 2 · 21 registros"; la tabla muestra 20 filas. |
+| 4 | Hacer clic en Siguiente. | "Página 2 de 2 · 21 registros"; 1 fila: el registro más antiguo. |
 
 ## TC-78 · Filtros combinados de acción y usuario.
 
 - **HU cubiertas:** HU-12 · **Prioridad:** Normal · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Tabla de decisión (filtros)
-- **Prerrequisitos:** Datos de prueba restaurados (POST /api/test/reset). Entregas hechas por admin y por operador.
+- **Prerrequisitos:** Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset). Entregas hechas por admin y por operador.
 - **Datos de prueba:** `Acción = ENTREGA` · `Usuario = operador`
 
 | Paso | Acción | Resultado esperado |
@@ -477,7 +478,7 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 
 - **HU cubiertas:** HU-12, HU-05 · **Prioridad:** Normal · **Tipo:** Nuevo V3
 - **Técnica de diseño:** Caso de uso
-- **Prerrequisitos:** Usuario logueado como Administrador (admin / admin123). Datos de prueba restaurados (POST /api/test/reset).
+- **Prerrequisitos:** Usuario logueado como Administrador (admin / admin123). Datos de prueba restaurados (reiniciar el servidor o POST /api/test/reset).
 - **Datos de prueba:** `EQ-00003: Marca Samsung → LG`
 
 | Paso | Acción | Resultado esperado |
