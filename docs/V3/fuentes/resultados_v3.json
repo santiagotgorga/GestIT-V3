@@ -108,6 +108,10 @@
     "TC-75": {
       "estado": "PASS",
       "obtenido": "Login con admin / admin999 → \"Usuario o contraseña incorrectos.\". En Auditoría: LOGIN_FALLIDO · admin · objeto admin · detalle \"Usuario o contraseña incorrectos.\"; la contraseña no aparece. También quedó registrado el LOGOUT de operador."
+    },
+    "TC-76": {
+      "estado": "PASS",
+      "obtenido": "Alta rechazada (Marca \"a\" → \"La marca debe tener entre 2 y 50 caracteres.\"). En Auditoría el total de registros no cambió: la operación rechazada no generó registro."
     }
   }
 }
