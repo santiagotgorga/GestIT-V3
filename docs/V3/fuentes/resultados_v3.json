@@ -44,6 +44,10 @@
     "TC-59": {
       "estado": "PASS",
       "obtenido": "Editar EQ-00001: modal con datos precargados; Modelo → Latitude 5430 → \"Equipo EQ-00001 actualizado correctamente.\". Ficha: Dell Latitude 5430, código EQ-00001 y estado Disponible sin cambios; el historial de estados sigue con una sola fila (Alta del equipo)."
+    },
+    "TC-60": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00001 con serie LN001 → \"Ya existe un equipo con ese número de serie.\", no se guarda. Con \" ln001 \" → mismo error. Con su propia serie DL001 y Observaciones \"Prueba TC-60\" → se guardó; la ficha muestra la observación."
     }
   }
 }
