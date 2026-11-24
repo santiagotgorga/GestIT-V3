@@ -72,6 +72,10 @@
     "TC-66": {
       "estado": "PASS",
       "obtenido": "Usuario \"ab\" → error de formato/longitud. \"abc\" → se crea. 20 caracteres → se crea. 21 caracteres → error. \"Tecnico\" (mayúscula) → \"El usuario debe tener entre 3 y 20 caracteres (minúsculas, números, . o _).\""
+    },
+    "TC-67": {
+      "estado": "PASS",
+      "obtenido": "Contraseña \"clave12\" (7) → error. \"clave123\" (8) → se crea pass2. \"clavelarga\" (sin números) → error. \"12345678\" (sin letras) → error."
     }
   }
 }
