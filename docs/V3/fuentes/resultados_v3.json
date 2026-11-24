@@ -48,6 +48,10 @@
     "TC-60": {
       "estado": "PASS",
       "obtenido": "Editar EQ-00001 con serie LN001 → \"Ya existe un equipo con ese número de serie.\", no se guarda. Con \" ln001 \" → mismo error. Con su propia serie DL001 y Observaciones \"Prueba TC-60\" → se guardó; la ficha muestra la observación."
+    },
+    "TC-61": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00002: Marca de 1 carácter → \"La marca debe tener entre 2 y 50 caracteres.\", no se guarda. 2 caracteres → se guarda. 50 → se guarda. 51 → mismo error, no se guarda. Observación (usabilidad): una marca de 50 letras sin espacios estira la columna; el listado necesita scroll horizontal y los botones de las filas pasan a dos renglones."
     }
   }
 }
