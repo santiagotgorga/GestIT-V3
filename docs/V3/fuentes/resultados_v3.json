@@ -96,6 +96,10 @@
     "TC-72": {
       "estado": "PASS",
       "obtenido": "Operador: sin \"Usuarios\" en el menú; /usuarios.html redirige al listado; GET /api/usuarios → HTTP 403. Admin: GET /api/usuarios → HTTP 200 con admin y operador (id, usuario, nombre, rol, activo, bloqueado), sin campo password."
+    },
+    "TC-73": {
+      "estado": "PASS",
+      "obtenido": "Navegador A (admin) pasa a operador a Administrador. Navegador B (operador con sesión abierta) recarga sin volver a loguearse → el encabezado dice Administrador, aparecen los menús Usuarios, Auditoría y Configuración, y el botón \"Dar de baja\" en los equipos Disponibles."
     }
   }
 }
