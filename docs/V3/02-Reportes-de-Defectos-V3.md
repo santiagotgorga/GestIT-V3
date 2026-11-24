@@ -165,3 +165,26 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Decisión** | En V3 se agrega a HU‑04 la regla "al menos una letra o un número" para el N° de serie. El resto queda como mejora futura. |
 | **Root cause** | Requerimiento incompleto. |
 | **Confirmation testing (V3)** | HU‑04 (v3) criterio 7. |
+
+---
+
+# Defectos encontrados durante la ejecución manual de V3
+
+## Defect Report – BUG‑09
+
+| Campo | Valor |
+|---|---|
+| **ID** | BUG‑09 |
+| **Title** | El CSV exportado se abre en una sola columna en Excel con configuración regional en español. |
+| **Description / Overview** | La HU‑19 pide exportar el listado "para imprimir las etiquetas", con separador **coma** y BOM "para que Excel muestre bien los acentos": el archivo está pensado para abrirse en Excel. Pero en Windows con configuración regional de Argentina (y de la mayoría de los países de habla hispana) el separador de listas es el **punto y coma**. Al abrir el CSV con doble clic, Excel deja cada fila entera en la columna A y no se pueden usar los datos para las etiquetas sin pasos manuales (Datos → Texto en columnas). |
+| **Reproduction Steps** | 1- En una PC con Windows en español (Argentina), iniciar sesión en GestIT. <br>2- En el listado, hacer clic en "Exportar CSV". <br>3- Abrir el archivo descargado con doble clic (Excel). |
+| **Expected Behavior** | Cada dato en su columna: código, marca, modelo, N° de serie, categoría y estado. |
+| **Actual Behavior (V3)** | Toda la fila queda en la columna A, por ejemplo `EQ-00006,"'=HYPERLINK(""http://x"",""x"")",Modelo X,CSV-0001,PC,Disponible`. |
+| **Incidence / Severity / Probability of reproduction** | Severidad **Media** (la funcionalidad no sirve para su objetivo sin pasos manuales) / 100 % en Excel con configuración regional en español. |
+| **Story and Acceptance Criteria affected** | HU‑19 (exportar el listado para imprimir etiquetas). También estaba en V2: los casos TC‑42 y TC‑43 verificaban el contenido del archivo, no cómo lo abre Excel. |
+| **Root cause** | Requerimiento incompleto: la HU‑19 fijó "separador coma" sin contemplar la configuración regional del Excel de los usuarios. |
+| **Cómo se encontró** | Ejecución manual de TC‑51 (confirmación de BUG‑04), Santiago Gorga, Excel en Windows. Ningún caso automatizado lo detecta: el oráculo es visual (cómo se ve en Excel). |
+| **Status** | Abierto. |
+| **Browsers tested** | Chrome (incógnito) · Microsoft Excel (Windows, configuración regional Argentina) |
+| **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
+| **Notes** | Corrección propuesta: ver el mensaje de seguimiento (separador punto y coma, o selector de separador). |

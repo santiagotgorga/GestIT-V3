@@ -1,7 +1,17 @@
 {
   "ejecutado_por": "Santiago Gorga",
   "resultados": {
-    "TC-49": {"estado": "PASS", "obtenido": "Pasos 1 a 4 → listado de equipos (/dashboard), sin salir a example.com y sin ejecutar scripts. Paso 5 → ficha de EQ-00002. Ejecutado en ventana de incógnito: en la ventana normal el paso 5 iba al listado por archivos viejos en la caché de Chrome (versión anterior de la app)."},
-    "TC-50": {"estado": "PASS", "obtenido": "Con sesión iniciada, /?next=/%5Cexample.com muestra el listado y la URL sigue en localhost; /?next=/equipo.html?codigo=EQ-00002 abre la ficha de EQ-00002."}
+    "TC-49": {
+      "estado": "PASS",
+      "obtenido": "Pasos 1 a 4 → listado de equipos (/dashboard), sin salir a example.com y sin ejecutar scripts. Paso 5 → ficha de EQ-00002. Ejecutado en ventana de incógnito: en la ventana normal el paso 5 iba al listado por archivos viejos en la caché de Chrome (versión anterior de la app)."
+    },
+    "TC-50": {
+      "estado": "PASS",
+      "obtenido": "Con sesión iniciada, /?next=/%5Cexample.com muestra el listado y la URL sigue en localhost; /?next=/equipo.html?codigo=EQ-00002 abre la ficha de EQ-00002."
+    },
+    "TC-51": {
+      "estado": "PASS",
+      "obtenido": "Bloc de notas: la marca se exporta como '=HYPERLINK(...) (con apóstrofo adelante). Excel: no se ejecuta ninguna fórmula; después de 'Texto en columnas' por coma, la celda de la marca se ve como texto plano. Observación: al abrir el CSV con doble clic, Excel (configuración regional de Argentina) deja toda la fila en la columna A porque espera punto y coma; se reportó como BUG-09."
+    }
   }
 }
