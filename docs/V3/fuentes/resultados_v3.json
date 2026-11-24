@@ -1,0 +1,7 @@
+{
+  "ejecutado_por": "Santiago Gorga",
+  "resultados": {
+    "TC-49": {"estado": "PASS", "obtenido": "Pasos 1 a 4 → listado de equipos (/dashboard), sin salir a example.com y sin ejecutar scripts. Paso 5 → ficha de EQ-00002. Ejecutado en ventana de incógnito: en la ventana normal el paso 5 iba al listado por archivos viejos en la caché de Chrome (versión anterior de la app)."},
+    "TC-50": {"estado": "PASS", "obtenido": "Con sesión iniciada, /?next=/%5Cexample.com muestra el listado y la URL sigue en localhost; /?next=/equipo.html?codigo=EQ-00002 abre la ficha de EQ-00002."}
+  }
+}
