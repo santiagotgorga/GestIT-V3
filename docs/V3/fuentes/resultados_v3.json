@@ -60,6 +60,10 @@
     "TC-63": {
       "estado": "PASS",
       "obtenido": "PATCH /api/equipos/EQ-00004 con {estado: Disponible, codigo: EQ-99999, marca: Dell} → HTTP 200; cambios: solo marca HP → Dell. EQ-00004 sigue En reparación y con el código EQ-00004 (verificado en el listado)."
+    },
+    "TC-64": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00001 y Guardar cambios sin modificar nada → \"No hay cambios para guardar.\"; el modal queda abierto. Observación (usabilidad): el mensaje se muestra con estilo de error (rojo) aunque es informativo."
     }
   }
 }
