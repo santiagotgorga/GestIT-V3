@@ -52,6 +52,10 @@
     "TC-61": {
       "estado": "PASS",
       "obtenido": "Editar EQ-00002: Marca de 1 carácter → \"La marca debe tener entre 2 y 50 caracteres.\", no se guarda. 2 caracteres → se guarda. 50 → se guarda. 51 → mismo error, no se guarda. Observación (usabilidad): una marca de 50 letras sin espacios estira la columna; el listado necesita scroll horizontal y los botones de las filas pasan a dos renglones."
+    },
+    "TC-62": {
+      "estado": "PASS",
+      "obtenido": "Admin da de baja EQ-00003. Con \"Incluir dados de baja\", la fila de EQ-00003 dice \"Sin acciones\" (no aparece Editar). PATCH /api/equipos/EQ-00003 → HTTP 409 \"No se puede editar un equipo dado de baja.\""
     }
   }
 }
