@@ -80,6 +80,10 @@
     "TC-68": {
       "estado": "PASS",
       "obtenido": "Pantalla: crear \"admin\" → \"Ya existe un usuario con ese nombre.\", no se crea. API: POST /api/usuarios con \"ADMIN\" → HTTP 400 \"El usuario debe tener entre 3 y 20 caracteres (minúsculas, números, . o _).\", no se crea."
+    },
+    "TC-69": {
+      "estado": "PASS",
+      "obtenido": "La fila de admin en Usuarios dice \"Tu usuario\", sin botones. admin intentando pasarse a Operador por API → HTTP 409 \"No podés modificar tu propio rol o estado.\". Se creó un segundo Administrador (admin3; un primer intento con admin2 no permitió el login, probablemente por un error de tipeo en la contraseña al crearlo). admin3 pasa a admin a Operador → HTTP 200. admin3 intentando desactivarse → HTTP 409 \"No podés modificar tu propio rol o estado.\""
     }
   }
 }
