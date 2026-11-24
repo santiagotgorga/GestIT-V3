@@ -76,6 +76,10 @@
     "TC-67": {
       "estado": "PASS",
       "obtenido": "Contraseña \"clave12\" (7) → error. \"clave123\" (8) → se crea pass2. \"clavelarga\" (sin números) → error. \"12345678\" (sin letras) → error."
+    },
+    "TC-68": {
+      "estado": "PASS",
+      "obtenido": "Pantalla: crear \"admin\" → \"Ya existe un usuario con ese nombre.\", no se crea. API: POST /api/usuarios con \"ADMIN\" → HTTP 400 \"El usuario debe tener entre 3 y 20 caracteres (minúsculas, números, . o _).\", no se crea."
     }
   }
 }
