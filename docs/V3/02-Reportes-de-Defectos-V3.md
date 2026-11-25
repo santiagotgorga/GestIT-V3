@@ -189,6 +189,25 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
 | **Notes** | Corrección propuesta: ver el mensaje de seguimiento (separador punto y coma, o selector de separador). |
 
+## Defect Report – BUG‑10
+
+| Campo | Valor |
+|---|---|
+| **ID** | BUG‑10 |
+| **Title** | En pantallas de 360 px el menú del Administrador no entra: "Auditoría" se corta y "Configuración" queda inaccesible. |
+| **Description / Overview** | La HU‑18 pide que la ficha sea "legible y operable en pantallas de 360 px de ancho". En V3 el menú del Administrador pasó de 3 opciones (Equipos, Empleados, Configuración) a 5 (se sumaron Usuarios y Auditoría). El menú mide 540 px y no se acomoda en varias líneas: en un celular de 360 px "Auditoría" queda cortada y "Configuración" fuera de la pantalla, sin forma de llegar. Con el Operador (2 opciones) no pasa. |
+| **Reproduction Steps** | 1- Iniciar sesión como admin. <br>2- Abrir la ficha de EQ‑00002. <br>3- F12 → Ctrl + Shift + M → Responsive 360 × 740. <br>4- Mirar el menú del encabezado. |
+| **Expected Behavior** | Todas las opciones del menú visibles y accesibles en 360 px (por ejemplo, en dos renglones). |
+| **Actual Behavior (V3)** | Se ven Equipos, Empleados, Usuarios y parte de "Auditoría"; "Configuración" queda fuera de la pantalla. |
+| **Incidence / Severity / Probability of reproduction** | Severidad **Media** (el Administrador no puede llegar a Configuración ni a Auditoría desde un celular) / 100 % con el rol Administrador en 360 px. |
+| **Story and Acceptance Criteria affected** | HU‑18 (criterio 3, 360 px), RNF‑03. |
+| **Root cause** | **Regresión introducida en V3:** al agregar los menús de HU‑11 y HU‑12 no se revisó el encabezado en 360 px. El TC‑41 de V2 se había ejecutado como Operador, que tiene un menú corto. |
+| **Cómo se encontró** | Regresión manual de TC‑41 en V3, Santiago Gorga (Chrome, vista de dispositivo 360 × 740). |
+| **Confirmation testing** | Volver a ejecutar TC‑41 como Administrador (y como Operador) después de la corrección. |
+| **Status** | Abierto. |
+| **Browsers tested** | Chrome (vista de dispositivo 360 × 740) |
+| **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
+
 ---
 
 # Defectos de los scripts de prueba automatizados

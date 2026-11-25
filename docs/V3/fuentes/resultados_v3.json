@@ -168,6 +168,10 @@
     "TC-39": {
       "estado": "PASS",
       "obtenido": "La ficha de EQ-00002 muestra el panel \"Código QR\". Escaneado con la cámara del celular: el link termina en /equipo.html?codigo=EQ-00002."
+    },
+    "TC-41": {
+      "estado": "FAIL",
+      "obtenido": "Ficha de EQ-00002 en 360 × 740 como admin: el contenido va en una columna, sin scroll horizontal y con botones de 40 px, pero el menú del encabezado no entra: \"Auditoría\" se corta y \"Configuración\" queda fuera de la pantalla, sin forma de acceder. La página no es operable para el Administrador en 360 px (HU-18). Reportado como BUG-10 (regresión introducida en V3 al sumar los menús Usuarios y Auditoría)."
     }
   }
 }
