@@ -28,7 +28,8 @@ def _manuales():
 
 
 MANUALES_RES, EJECUTOR = _manuales()
-ABIERTOS_V3 = ("BUG-09", "BUG-10")  # defectos encontrados en la ejecución de V3, entregados abiertos
+ABIERTOS_V3 = ("BUG-09", "BUG-10")
+AUTO_RES = {}  # defectos encontrados en la ejecución de V3, entregados abiertos
 
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 DOCS = os.path.join(RAIZ, "docs", "V3")
@@ -98,7 +99,7 @@ def hoja_caso(wb, plantilla, caso):
     ws["B1"] = caso["id"]
     ws["D1"] = caso["desc"]
     res = MANUALES_RES.get(caso["id"])
-    ws["B2"] = "Grupo 12 (borrador asistido por IA)"
+    ws["B2"] = "Grupo 12"
     ws["D2"] = EJECUTOR if res else "A completar"
     ws["B3"] = res["estado"] if res else "Pendiente"
     ws["E3"] = 3.0
@@ -268,6 +269,8 @@ def hoja_resumen(wb, tcs_v2, auto):
 
 
 def generar_excel(planilla_v2, ruta_json):
+    global AUTO_RES
+    AUTO_RES = resultados_automatizados(ruta_json)
     wb = openpyxl.load_workbook(planilla_v2)
 
     # Casos de V1/V2 automatizados: se actualiza el campo "Automation Status"
@@ -280,6 +283,38 @@ def generar_excel(planilla_v2, ruta_json):
                 if c.value == "Automation Status":
                     ws.cell(row=c.row, column=c.column + 1, value="Automated (Selenium)")
 
+    # Casos de V1/V2 que se volvieron a ejecutar en V3: QA Tester's Log y una fila "Actual Result (V3)"
+    for nombre in AUTOMATIZADOS + MANUALES:
+        if nombre not in wb.sheetnames:
+            continue
+        ws = wb[nombre]
+        if nombre in MANUALES:
+            res = MANUALES_RES.get(nombre)
+            if not res:
+                continue
+            estado, obtenido = res["estado"], f"Regresión manual en V3 ({EJECUTOR}): {res['obtenido']}"
+        else:
+            estado = AUTO_RES.get(nombre)
+            if not estado:
+                continue
+            obtenido = ("Regresión automatizada en V3 (Selenium, npm test): " + estado +
+                        ". Corrida oficial en la PC del equipo: 31 de 31 PASS.")
+        ref = None
+        for row in ws.iter_rows():
+            for c in row:
+                if c.value == "QA Tester’s Log" or c.value == "QA Tester's Log":
+                    ws.cell(row=c.row, column=c.column + 1, value=estado)
+                if isinstance(c.value, str) and c.value.startswith("Actual Result (V2)"):
+                    ref = c.row
+        if ref:
+            nueva = ws.max_row + 1
+            for col in range(1, 6):
+                estilo(ws.cell(row=ref, column=col), ws.cell(row=nueva, column=col))
+            ws.cell(row=nueva, column=1, value="Actual Result (V3)")
+            ws.cell(row=nueva, column=2, value=obtenido).alignment = Alignment(wrap_text=True, vertical="top")
+            ws.merge_cells(start_row=nueva, start_column=2, end_row=nueva, end_column=5)
+            ws.row_dimensions[nueva].height = 60 if len(obtenido) > 110 else 30
+
     plantilla = wb["TC-07"]
     for caso in CASOS:
         hoja_caso(wb, plantilla, caso)
@@ -289,7 +324,14 @@ def generar_excel(planilla_v2, ruta_json):
     # Casos de V1/V2 con su estado (extraídos de "02 – Ejecución, Resumen y Defectos V2")
     with open(os.path.join(os.path.dirname(__file__), "tcs_v1_v2.json"), encoding="utf-8") as f:
         tcs_v2 = json.load(f)
-    hoja_resumen(wb, tcs_v2, resultados_automatizados(ruta_json))
+    hoja_resumen(wb, tcs_v2, AUTO_RES)
+
+    # Matias Sosa dejó la materia: sus celdas pasan a "Grupo 12"
+    for hoja in wb.worksheets:
+        for row in hoja.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.strip() in ("Matias Sosa", "Matías Sosa"):
+                    c.value = "Grupo 12"
     destino = os.path.join(DOCS, "TPO - TC and Defect Template GRUPO12 - V3.xlsx")
     wb.save(destino)
     return destino

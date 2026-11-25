@@ -1,7 +1,7 @@
 # GestIT — Requerimientos de la Versión 3 (V3)
 
 Testing de Aplicaciones · UADE · Grupo 12
-Integrantes: Juan Ignacio Rua · Santiago Gorga · Santino Defilippo · Matias Sosa
+Integrantes: Juan Ignacio Rua · Santiago Gorga · Santino Defilippo
 
 > **Estado: implementado en V3 (rama `v3`). Revisión del grupo pendiente.** Mismo formato que el documento de V2:
 > Historia · Pantalla / UI · Campos · Reglas · Criterios de aceptación (Dado / Cuando / Entonces).

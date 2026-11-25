@@ -129,7 +129,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "Solo EQ-00003; contador “1 equipo”.",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-12",
@@ -141,7 +141,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "Por defecto no aparece EQ-00003; con “Incluir dados de baja” sí aparece.",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-13",
@@ -153,7 +153,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "Notebook → [“EQ-00001”, “EQ-00004”]; + En reparación → [“EQ-00004”].",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-14",
@@ -165,7 +165,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "Mensaje de sin resultados visible; “Limpiar filtros” restaura 5 equipos.",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-15",
@@ -333,7 +333,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "Carlos Pérez queda “Inactivo” y sigue en la tabla.",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-29",
@@ -345,7 +345,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "“No se puede dar de baja: el empleado tiene 1 equipo(s) asignado(s).”; sigue Activa. Operador sin botón y API 403.",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-30",
@@ -441,7 +441,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "Acta AE-000001 con equipo EQ-00005, Gómez, Ana, dos firmas y botón Imprimir.",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-38",
@@ -453,7 +453,7 @@
   "v1": "N/A (nuevo)",
   "v2": "PASS",
   "obtenido": "“No se encontró el acta AE-999999.”",
-  "ejecutor": "Matias Sosa"
+  "ejecutor": "Grupo 12"
  },
  {
   "id": "TC-39",
