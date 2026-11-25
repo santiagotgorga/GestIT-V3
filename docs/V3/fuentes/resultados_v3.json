@@ -140,6 +140,10 @@
     "TC-11": {
       "estado": "PASS",
       "obtenido": "Buscar \"eq-00003\" → solo EQ-00003 (Samsung S24F350); contador \"1 equipo\"."
+    },
+    "TC-13": {
+      "estado": "PASS",
+      "obtenido": "Categoría Notebook → EQ-00001 y EQ-00004 (\"2 equipos\"). + Estado En reparación → solo EQ-00004 (\"1 equipo\")."
     }
   }
 }
