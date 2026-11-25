@@ -172,6 +172,10 @@
     "TC-41": {
       "estado": "FAIL",
       "obtenido": "Ficha de EQ-00002 en 360 × 740 como admin: el contenido va en una columna, sin scroll horizontal y con botones de 40 px, pero el menú del encabezado no entra: \"Auditoría\" se corta y \"Configuración\" queda fuera de la pantalla, sin forma de acceder. La página no es operable para el Administrador en 360 px (HU-18). Reportado como BUG-10 (regresión introducida en V3 al sumar los menús Usuarios y Auditoría)."
+    },
+    "TC-42": {
+      "estado": "PASS",
+      "obtenido": "CSV sin filtros (UTF-8 con BOM): encabezado correcto y 6 filas (EQ-00001 a EQ-00006); el modelo con coma y comilla aparece como \"Latitude 5420, 14\"\"\" (escape correcto). En Excel ninguna celda se ejecuta como fórmula. Excel muestra cada fila en la columna A (BUG-09, ya reportado)."
     }
   }
 }
