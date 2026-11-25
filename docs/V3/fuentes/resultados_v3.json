@@ -184,6 +184,10 @@
     "TC-83": {
       "estado": "FAIL",
       "obtenido": "5 intentos con admin / x → los primeros 4 \"Usuario o contraseña incorrectos.\" y el 5.º \"Usuario bloqueado por intentos fallidos…\". Con admin / admin123 → mismo mensaje de bloqueo. Como operador: no aparece Usuarios, /usuarios.html redirige al listado y POST /api/usuarios/admin/desbloquear → HTTP 403. Nadie puede desbloquear al único Administrador: el sistema queda sin administración 15 minutos y el ataque se puede repetir solo conociendo el nombre de usuario. Reportado como BUG-11."
+    },
+    "TC-84": {
+      "estado": "FAIL",
+      "obtenido": "5 intentos con operador / x → 4 respuestas HTTP 401 \"Usuario o contraseña incorrectos.\" y la 5.ª HTTP 423 \"Usuario bloqueado por intentos fallidos…\". 5 intentos con juan / x → siempre HTTP 401 \"Usuario o contraseña incorrectos.\". Comparando mensajes y códigos se sabe que operador existe y juan no. Reportado como BUG-12."
     }
   }
 }

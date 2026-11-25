@@ -34,4 +34,36 @@ seguridad introdujo otro: un caso clásico de por qué hay que explorar también
 
 ## CH‑07 · ¿El bloqueo revela qué usuarios existen?
 
-*Pendiente.*
+| Campo | Valor |
+|---|---|
+| **Misión** | Explorar los mensajes del login y del bloqueo con la intención de averiguar qué usuarios existen sin conocer ninguna contraseña. |
+| **Áreas** | Login (pantalla y API), mensajes de error, bloqueo por intentos. |
+| **Duración** | 15 minutos |
+| **Tester** | Santiago Gorga |
+| **Entorno** | V3 (rama `v3`), localhost:3000, curl |
+
+**Qué se probó y qué se vio:**
+
+| Prueba | Resultado |
+|---|---|
+| 5 intentos por API con `operador` / `x` (existe) | 4 × HTTP 401 "Usuario o contraseña incorrectos." y la 5.ª HTTP 423 "Usuario bloqueado…" |
+| 5 intentos por API con `juan` / `x` (no existe) | 5 × HTTP 401 "Usuario o contraseña incorrectos." |
+| ¿Se puede saber cuál existe? | **Sí**: el que se bloquea existe. Con una lista de nombres y 5 intentos por nombre se averigua qué usuarios son reales |
+
+**Hallazgo:** el bloqueo revela qué usuarios existen, contra lo que pide la HU‑01 → **BUG‑12** (severidad Media),
+demostrado por **TC‑84 (FAIL)**.
+
+**Reflexión:** el TC‑58 había dado PASS porque verificaba que un usuario inexistente no se bloquea. El problema
+aparece recién al **comparar** con un usuario real: el caso confirmaba el criterio sin ver el problema de fondo,
+justo lo que señaló el profesor en la devolución de la Entrega 02.
+
+## Resumen del exploratorio de V3
+
+| Charter | Duración | Defectos | Caso |
+|---|---|---|---|
+| CH‑06 · ¿Se puede dejar al sistema sin administrador? | 15 min | BUG‑11 (Alta) | TC‑83 FAIL |
+| CH‑07 · ¿El bloqueo revela qué usuarios existen? | 15 min | BUG‑12 (Media) | TC‑84 FAIL |
+
+Los dos defectos nacen de la misma funcionalidad nueva (el bloqueo de HU‑11, que corrigió el BUG‑06). BUG‑12
+permite averiguar qué usuarios existen y BUG‑11 permite bloquearlos: combinados, un atacante sin ninguna contraseña
+puede dejar fuera del sistema a todos los usuarios.

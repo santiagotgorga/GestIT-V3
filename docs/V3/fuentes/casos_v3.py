@@ -301,6 +301,19 @@ CASOS.append(
          ])
 )
 
+CASOS.append(
+    dict(id="TC-84", desc="Los mensajes del login no revelan qué usuarios existen (ni siquiera con el bloqueo).",
+         hu="HU-01, HU-11", prioridad="Normal", tipo="Exploratorio V3",
+         tecnica="Exploratorio con charter (CH-07) + partición de equivalencias (usuario existente / inexistente)",
+         pre=["Servidor recién iniciado.", "Sin sesión iniciada."],
+         datos=["Usuario existente = operador", "Usuario inexistente = juan", "Contraseña incorrecta = x"],
+         pasos=[
+             ("Por API, 5 intentos con operador / x.", "Mismas respuestas que con un usuario inexistente."),
+             ("Por API, 5 intentos con juan / x.", "Mismas respuestas que con operador."),
+             ("Comparar mensajes y códigos HTTP de las dos tandas.", "No se puede distinguir cuál de los dos usuarios existe (HU-01: mismo mensaje \"para no revelar qué usuarios existen\")."),
+         ])
+)
+
 DEFECTOS = [
     # id, título, descripción corta, pasos, esperado, obtenido, severidad, HU, causa, confirmación
     ("BUG-02", "Redirección abierta en el login con ?next=/\\dominio o con tabulación.",
@@ -360,4 +373,11 @@ DEFECTOS = [
      "admin queda bloqueado 15 minutos y nadie puede desbloquearlo; el ataque se puede repetir indefinidamente.",
      "Alta (seguridad: denegación de servicio sobre la administración) / 100 %", "HU-11, HU-01 (regla de bloqueo)",
      "Requerimiento incompleto: la HU-11 definió el bloqueo para frenar la fuerza bruta (BUG-06) sin contemplar que también sirve para bloquear cuentas ajenas.", "TC-83 (FAIL)"),
+    ("BUG-12", "El bloqueo por intentos revela qué usuarios existen (enumeración de usuarios).",
+     "La HU-01 usa el mismo mensaje para usuario inexistente y contraseña incorrecta \"para no revelar qué usuarios existen\". Pero el bloqueo de HU-11 solo se aplica a usuarios reales: al 5.º intento, un usuario existente responde 423 \"Usuario bloqueado…\" y uno inexistente sigue respondiendo 401 \"Usuario o contraseña incorrectos.\". Probando 5 veces cada nombre de una lista, un atacante sabe cuáles existen, sin conocer ninguna contraseña. Encontrado en la sesión exploratoria CH-07.",
+     ["1- POST /api/login 5 veces con operador / x → 4 respuestas 401 y la 5.ª 423 \"Usuario bloqueado…\"", "2- POST /api/login 5 veces con juan / x → 5 respuestas 401", "3- Comparar: operador existe, juan no"],
+     "Las respuestas no permiten distinguir un usuario existente de uno inexistente.",
+     "El usuario existente se bloquea (423, mensaje distinto) y el inexistente no: se puede saber qué usuarios existen.",
+     "Media (seguridad: facilita ataques dirigidos, por ejemplo combinado con BUG-11) / 100 %", "HU-01 (regla del mismo mensaje), HU-11",
+     "Requerimiento contradictorio: la regla de bloqueo de HU-11 no se cruzó con la regla de HU-01. El TC-58 verificaba que un inexistente no se bloquea, pero no lo comparaba con un usuario real.", "TC-84 (FAIL)"),
 ]

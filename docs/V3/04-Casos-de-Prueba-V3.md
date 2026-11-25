@@ -48,8 +48,9 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 | TC-81 | El Operador no accede a la auditoría. | HU-12, HU-03 | Nuevo V3 | Tabla de decisión (rol × acción) | High |
 | TC-82 | La edición de un equipo queda auditada con antes y después. | HU-12, HU-05 | Nuevo V3 | Caso de uso | Normal |
 | TC-83 | Bloquear al único Administrador no debe dejar al sistema sin administración. | HU-11, HU-01 | Exploratorio V3 | Exploratorio con charter (CH-06) + predicción de errores | High |
+| TC-84 | Los mensajes del login no revelan qué usuarios existen (ni siquiera con el bloqueo). | HU-01, HU-11 | Exploratorio V3 | Exploratorio con charter (CH-07) + partición de equivalencias (usuario existente / inexistente) | Normal |
 
-**Total: 35 casos** (8 de confirmación y 27 nuevos de V3).
+**Total: 36 casos** (8 de confirmación y 28 nuevos de V3).
 
 ## TC-49 · Confirmación BUG-02: ?next= con barra invertida o tabulación no sale del sistema.
 
@@ -499,3 +500,16 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 | 1 | Sin conocer la contraseña, intentar 5 veces admin / x desde el login. | El sistema no queda sin administración: el Administrador legítimo puede seguir ingresando o existe una forma de recuperarlo (otro Administrador, demora progresiva, etc.). |
 | 2 | Ingresar con admin / admin123. | Ingresa. |
 | 3 | Como operador, intentar desbloquear a admin (pantalla Usuarios o POST /api/usuarios/admin/desbloquear). | No corresponde que el Operador pueda (HU-03), por eso el sistema tiene que ofrecer otra vía. |
+
+## TC-84 · Los mensajes del login no revelan qué usuarios existen (ni siquiera con el bloqueo).
+
+- **HU cubiertas:** HU-01, HU-11 · **Prioridad:** Normal · **Tipo:** Exploratorio V3
+- **Técnica de diseño:** Exploratorio con charter (CH-07) + partición de equivalencias (usuario existente / inexistente)
+- **Prerrequisitos:** Servidor recién iniciado. Sin sesión iniciada.
+- **Datos de prueba:** `Usuario existente = operador` · `Usuario inexistente = juan` · `Contraseña incorrecta = x`
+
+| Paso | Acción | Resultado esperado |
+|---|---|---|
+| 1 | Por API, 5 intentos con operador / x. | Mismas respuestas que con un usuario inexistente. |
+| 2 | Por API, 5 intentos con juan / x. | Mismas respuestas que con operador. |
+| 3 | Comparar mensajes y códigos HTTP de las dos tandas. | No se puede distinguir cuál de los dos usuarios existe (HU-01: mismo mensaje "para no revelar qué usuarios existen"). |

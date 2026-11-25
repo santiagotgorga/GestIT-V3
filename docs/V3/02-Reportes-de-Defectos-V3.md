@@ -2,7 +2,7 @@
 
 Testing de Aplicaciones · UADE · Grupo 12
 
-> **Estado:** BUG‑02 a BUG‑08 y OBS‑01 corregidos en V3 y **confirmados** (TC‑49 a TC‑56: PASS). BUG‑09, BUG‑10 y BUG‑11, encontrados en la ejecución y el exploratorio de V3, quedan **abiertos**. AUT‑01 (falso negativo de los scripts) corregido y confirmado. Los campos siguen la hoja "Defect Report - Template" de la
+> **Estado:** BUG‑02 a BUG‑08 y OBS‑01 corregidos en V3 y **confirmados** (TC‑49 a TC‑56: PASS). BUG‑09 a BUG‑12, encontrados en la ejecución y el exploratorio de V3, quedan **abiertos**. AUT‑01 (falso negativo de los scripts) corregido y confirmado. Los campos siguen la hoja "Defect Report - Template" de la
 > plantilla del grupo, con los mismos agregados que BUG‑01 (Root cause, Confirmation testing, Status).
 > Después se pasan a la planilla Excel.
 
@@ -225,6 +225,24 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Cómo se encontró** | Sesión de testing exploratorio **CH‑06** sobre V3, Santiago Gorga. Caso que lo demuestra: **TC‑83 (FAIL)**. |
 | **Status** | **Abierto** (a corregir en la próxima versión). |
 | **Browsers tested** | Chrome (incógnito) y Edge · curl |
+| **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
+
+## Defect Report – BUG‑12
+
+| Campo | Valor |
+|---|---|
+| **ID** | BUG‑12 |
+| **Title** | El bloqueo por intentos revela qué usuarios existen (enumeración de usuarios). |
+| **Description / Overview** | La HU‑01 usa el mismo mensaje para usuario inexistente y contraseña incorrecta "para no revelar qué usuarios existen". Pero el bloqueo de HU‑11 solo se aplica a usuarios reales: al 5.º intento, un usuario existente responde **423** "Usuario bloqueado…" y uno inexistente sigue respondiendo **401** "Usuario o contraseña incorrectos.". Probando 5 veces cada nombre de una lista, un atacante sabe cuáles existen sin conocer ninguna contraseña, y después puede bloquearlos (BUG‑11). |
+| **Reproduction Steps** | 1- `POST /api/login` 5 veces con `operador` / `x` → 4 respuestas 401 y la 5.ª 423 "Usuario bloqueado…". <br>2- `POST /api/login` 5 veces con `juan` / `x` → 5 respuestas 401. <br>3- Comparar: operador existe, juan no. |
+| **Expected Behavior** | Las respuestas no permiten distinguir un usuario existente de uno inexistente. |
+| **Actual Behavior (V3)** | El usuario existente se bloquea (423, otro mensaje) y el inexistente no. |
+| **Incidence / Severity / Probability of reproduction** | Severidad **Media** (seguridad: facilita ataques dirigidos, por ejemplo combinado con BUG‑11) / 100 %. |
+| **Story and Acceptance Criteria affected** | HU‑01 (regla del mismo mensaje), HU‑11. |
+| **Root cause** | Requerimiento contradictorio: la regla de bloqueo de HU‑11 no se cruzó con la regla de HU‑01. El **TC‑58** verificaba que un usuario inexistente no se bloquea, pero no lo comparaba con uno real: el caso confirmaba el criterio sin ver el problema. |
+| **Cómo se encontró** | Sesión de testing exploratorio **CH‑07** sobre V3, Santiago Gorga. Caso que lo demuestra: **TC‑84 (FAIL)**. |
+| **Status** | **Abierto** (a corregir en la próxima versión). |
+| **Browsers tested** | curl (API) |
 | **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
 
 ---
