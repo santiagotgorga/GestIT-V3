@@ -132,6 +132,10 @@
     "TC-81": {
       "estado": "PASS",
       "obtenido": "Operador: el menú muestra solo Equipos y Empleados (sin Auditoría); /auditoria.html redirige al listado (/dashboard); GET /api/auditoria → HTTP 403 \"No tenés permisos para realizar esta operación.\""
+    },
+    "TC-82": {
+      "estado": "PASS",
+      "obtenido": "Admin edita EQ-00003: Marca Samsung → LG, \"Equipo EQ-00003 actualizado correctamente.\". Auditoría: EQUIPO_EDICION · admin · EQ-00003 · Marca: \"Samsung\" → \"LG\"."
     }
   }
 }

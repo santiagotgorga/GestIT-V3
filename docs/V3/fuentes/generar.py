@@ -18,6 +18,17 @@ from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 sys.path.insert(0, os.path.dirname(__file__))
 from casos_v3 import CASOS, DEFECTOS  # noqa: E402
 
+def _manuales():
+    ruta = os.path.join(os.path.dirname(__file__), "resultados_v3.json")
+    if not os.path.exists(ruta):
+        return {}, ""
+    with open(ruta, encoding="utf-8") as f:
+        data = json.load(f)
+    return data.get("resultados", {}), data.get("ejecutado_por", "")
+
+
+MANUALES_RES, EJECUTOR = _manuales()
+
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 DOCS = os.path.join(RAIZ, "docs", "V3")
 
@@ -85,9 +96,10 @@ def hoja_caso(wb, plantilla, caso):
 
     ws["B1"] = caso["id"]
     ws["D1"] = caso["desc"]
-    ws["B2"] = "A completar"
-    ws["D2"] = "A completar"
-    ws["B3"] = "Pendiente"
+    res = MANUALES_RES.get(caso["id"])
+    ws["B2"] = "Grupo 12 (borrador asistido por IA)"
+    ws["D2"] = EJECUTOR if res else "A completar"
+    ws["B3"] = res["estado"] if res else "Pendiente"
     ws["E3"] = 3.0
     ws["B5"] = caso["prioridad"]
 
@@ -120,7 +132,8 @@ def hoja_caso(wb, plantilla, caso):
         ws.merge_cells(start_row=fila, start_column=4, end_row=fila, end_column=5)
         ws.row_dimensions[fila].height = 45
     fila += 2
-    poner(fila, 26, ["Actual Result (V3)", "A completar al ejecutar.", None, None, None])
+    poner(fila, 26, ["Actual Result (V3)", res["obtenido"] if res else "A completar al ejecutar.", None, None, None])
+    ws.row_dimensions[fila].height = 60 if res and len(res["obtenido"]) > 120 else 30
     ws.merge_cells(start_row=fila, start_column=2, end_row=fila, end_column=5)
     fila += 1
     poner(fila, 27, ["Técnica de diseño", caso["tecnica"], None, "Tipo de prueba", caso["tipo"]])
@@ -191,14 +204,20 @@ def hoja_resumen(wb, tcs_v2, auto):
             quien = "Selenium (npm test)" if i in auto else ""
             obt = "Ver reportes/reporte-regresion.html" if i in auto else ""
         elif i in MANUALES:
-            dec, est, quien, obt = "Regresión manual", "Pendiente", "", ""
+            res = MANUALES_RES.get(i)
+            dec = "Regresión manual"
+            est, obt, quien = (res["estado"], res["obtenido"], EJECUTOR) if res else ("Pendiente", "", "")
         else:
             dec, est, quien, obt = "No se ejecuta en V3", "N/A", "", "Riesgo bajo (ver 03-Seleccion...)"
         ws.append([i, t["desc"], t["hu"], t["tipo"], t["prioridad"], dec,
                    t["v1"], t["v2"], est, obt, quien])
     for c in CASOS:
+        res = MANUALES_RES.get(c["id"])
         ws.append([c["id"], c["desc"], c["hu"], c["tipo"], c["prioridad"], "Nuevo V3 (manual)",
-                   "N/A (nuevo)", "N/A (nuevo)", "Pendiente", "", ""])
+                   "N/A (nuevo)", "N/A (nuevo)",
+                   res["estado"] if res else "Pendiente",
+                   res["obtenido"] if res else "",
+                   EJECUTOR if res else ""])
     ultima = ws.max_row
     for row in ws.iter_rows(min_row=2, max_row=ultima):
         for c in row:

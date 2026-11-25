@@ -326,4 +326,11 @@ DEFECTOS = [
      ["1- POST /api/equipos con Marca de 30 × 💻"],
      "Se acepta (30 ≤ 50).", "HTTP 400 \"La marca debe tener entre 2 y 50 caracteres.\"",
      "Baja / 100 %", "HU-04 (y todo campo con longitud)", "Uso de .length en lugar de contar caracteres.", "TC-55"),
+    ("BUG-09", "El CSV exportado se abre en una sola columna en Excel con configuración regional en español.",
+     "La HU-19 fija separador coma, pero en Windows con configuración regional de Argentina el separador de listas es el punto y coma: al abrir el CSV con doble clic, Excel deja cada fila entera en la columna A. Encontrado en la ejecución manual de TC-51.",
+     ["1- En Windows en español (Argentina), iniciar sesión en GestIT", "2- Exportar CSV desde el listado", "3- Abrir el archivo con doble clic (Excel)"],
+     "Cada dato en su columna (código, marca, modelo, N° de serie, categoría, estado).",
+     "Toda la fila queda en la columna A.",
+     "Media / 100 % en Excel con configuración regional en español", "HU-19 (también estaba en V2)",
+     "Requerimiento incompleto: no contempló la configuración regional de Excel.", "pendiente (a definir con la corrección)"),
 ]
