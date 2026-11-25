@@ -176,6 +176,10 @@
     "TC-42": {
       "estado": "PASS",
       "obtenido": "CSV sin filtros (UTF-8 con BOM): encabezado correcto y 6 filas (EQ-00001 a EQ-00006); el modelo con coma y comilla aparece como \"Latitude 5420, 14\"\"\" (escape correcto). En Excel ninguna celda se ejecuta como fórmula. Excel muestra cada fila en la columna A (BUG-09, ya reportado)."
+    },
+    "TC-33": {
+      "estado": "PASS",
+      "obtenido": "Entrega de EQ-00001 a Pérez, Carlos → \"Equipo entregado. Acta AE-000002 generada.\"; entrega de EQ-00002 → Acta AE-000003."
     }
   }
 }

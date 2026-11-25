@@ -333,4 +333,11 @@ DEFECTOS = [
      "Toda la fila queda en la columna A.",
      "Media / 100 % en Excel con configuración regional en español", "HU-19 (también estaba en V2)",
      "Requerimiento incompleto: no contempló la configuración regional de Excel.", "pendiente (a definir con la corrección)"),
+    ("BUG-10", "En pantallas de 360 px el menú del Administrador no entra: \"Auditoría\" se corta y \"Configuración\" queda inaccesible.",
+     "En V3 el menú del Administrador pasó de 3 a 5 opciones (se sumaron Usuarios y Auditoría) y no se acomoda en varios renglones: en 360 px \"Configuración\" queda fuera de la pantalla. Regresión introducida en V3, encontrada en la regresión manual de TC-41 (en V2 el caso se había ejecutado como Operador).",
+     ["1- Iniciar sesión como admin", "2- Abrir la ficha de EQ-00002", "3- F12 → Ctrl + Shift + M → Responsive 360 × 740", "4- Mirar el menú del encabezado"],
+     "Todas las opciones del menú visibles y accesibles en 360 px.",
+     "\"Auditoría\" se corta y \"Configuración\" queda fuera de la pantalla, sin forma de acceder.",
+     "Media / 100 % con el rol Administrador en 360 px", "HU-18 (criterio 3), RNF-03",
+     "Regresión introducida en V3: al agregar los menús de HU-11 y HU-12 no se revisó el encabezado en 360 px.", "TC-41 (pendiente: defecto abierto)"),
 ]
