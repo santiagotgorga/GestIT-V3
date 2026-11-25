@@ -1,0 +1,354 @@
+<title>Guía de exposición GestIT V3</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+  /* Layout: una columna de lectura (~68ch), índice arriba, tablas con scroll propio, recuadros solo para lo que hay que decir en voz alta. */
+  :root {
+    --bg: #F6F7FA;
+    --surface: #FFFFFF;
+    --fg: #172036;
+    --muted: #55607A;
+    --line: #DCE1EC;
+    --accent: #2453D4;
+    --accent-soft: #E3EAFC;
+    --ok: #1C7A4B;
+    --ok-soft: #E1F3E9;
+    --bad: #B83A12;
+    --bad-soft: #FBE7DE;
+    --font-display: "Space Grotesk", "Segoe UI", Arial, sans-serif;
+    --font-text: "Inter", "Segoe UI", Arial, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1524; --surface: #172036; --fg: #E6EAF4; --muted: #A2ADC6; --line: #2A3552;
+      --accent: #8EAEFF; --accent-soft: #1F2D52; --ok: #6FD39E; --ok-soft: #133426;
+      --bad: #FF9D7A; --bad-soft: #3A1E14; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1524; --surface: #172036; --fg: #E6EAF4; --muted: #A2ADC6; --line: #2A3552;
+    --accent: #8EAEFF; --accent-soft: #1F2D52; --ok: #6FD39E; --ok-soft: #133426;
+    --bad: #FF9D7A; --bad-soft: #3A1E14; color-scheme: dark;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding-block: 40px 80px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.2; }
+  h1 { font-size: clamp(2rem, 6vw, 2.8rem); font-weight: 700; }
+  h2 { font-size: 1.55rem; font-weight: 600; }
+  h3 { font-size: 1.12rem; font-weight: 600; }
+  p, ul, ol { margin: 0; }
+  ul, ol { padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+  a { color: var(--accent); }
+  code, .mono { font-family: var(--font-mono); font-size: 0.9em; background: var(--accent-soft); padding: 1px 6px; border-radius: 5px; }
+  strong { font-weight: 600; }
+
+  header { display: flex; flex-direction: column; gap: 12px; }
+  .eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .lead { color: var(--muted); font-size: 1.05rem; }
+
+  section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 16px; }
+  .sec-num { font-family: var(--font-display); color: var(--accent); font-weight: 600; margin-right: 8px; }
+
+  nav.indice { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 22px; }
+  nav.indice ol { columns: 2; column-gap: 28px; display: block; }
+  nav.indice li { break-inside: avoid; margin-bottom: 4px; }
+  @media (max-width: 560px) { nav.indice ol { columns: 1; } }
+
+  .decir {
+    background: var(--accent-soft);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .decir .etq { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .decir p { font-size: 1.02rem; }
+
+  .cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 620px) { .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .cifra { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .cifra b { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .cifra span { font-size: 0.85rem; color: var(--muted); }
+  .cifra.ok b { color: var(--ok); }
+  .cifra.bad b { color: var(--bad); }
+
+  .tabla { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill { display: inline-block; font-size: 0.78rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .pill.ok { background: var(--ok-soft); color: var(--ok); }
+  .pill.bad { background: var(--bad-soft); color: var(--bad); }
+  .pill.neu { background: var(--accent-soft); color: var(--accent); }
+
+  .linea { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 0 16px; }
+  .linea .v { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--accent); padding-top: 2px; }
+  .linea .c { padding-bottom: 18px; border-left: 2px solid var(--line); padding-left: 16px; margin-left: -16px; display: flex; flex-direction: column; gap: 4px; }
+  .linea .c p { color: var(--muted); }
+
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+  details + details { margin-top: -6px; }
+  summary { cursor: pointer; font-weight: 600; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  details p { margin-top: 8px; color: var(--fg); }
+
+  .glos { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 8px 18px; }
+  .glos dt { font-weight: 600; }
+  .glos dd { margin: 0; color: var(--muted); }
+  @media (max-width: 520px) { .glos { grid-template-columns: minmax(0, 1fr); } .glos dd { margin-bottom: 8px; } }
+
+  pre { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.88rem; }
+  .nota { font-size: 0.9rem; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Testing de Aplicaciones · UADE · Grupo 12 · Entrega 03</p>
+  <h1>Guía de exposición GestIT V3</h1>
+  <p class="lead">Todo lo que hay que saber para presentar hoy: qué teníamos en V2, qué hicimos en V3, qué encontramos y cómo responder las preguntas del profe.</p>
+</header>
+
+<div class="cifras" aria-label="Resumen en números">
+  <div class="cifra"><b>78</b><span>casos ejecutados en V3</span></div>
+  <div class="cifra ok"><b>75</b><span>PASS (96,2 %)</span></div>
+  <div class="cifra bad"><b>3</b><span>FAIL (TC‑41, 83, 84)</span></div>
+  <div class="cifra bad"><b>4</b><span>defectos nuevos, abiertos</span></div>
+</div>
+
+<div class="decir">
+  <span class="etq">El resumen en 30 segundos</span>
+  <p>"En V2 dimos 100 % PASSED y el profe nos marcó que faltó testing exploratorio. En V3 hicimos exploratorio y encontramos 7 defectos en V2, los corregimos y los confirmamos. Sumamos tres funcionalidades del backlog original: editar equipos, usuarios con bloqueo y auditoría. Automatizamos 31 casos de regresión con Selenium. Ejecutamos 78 casos: 75 pasaron y 3 fallaron. Y encontramos 4 defectos nuevos, entre ellos que el bloqueo que agregamos para corregir un bug introdujo dos más."</p>
+</div>
+
+<nav class="indice" aria-label="Índice">
+  <ol>
+    <li><a href="#contexto">De qué se trata GestIT</a></li>
+    <li><a href="#v2">Qué teníamos en V2</a></li>
+    <li><a href="#devolucion">La devolución del profe</a></li>
+    <li><a href="#corregidos">Defectos de V2 corregidos</a></li>
+    <li><a href="#nuevo">Lo nuevo de V3</a></li>
+    <li><a href="#seleccion">Selección y automatización</a></li>
+    <li><a href="#ejecucion">Ejecución y resultados</a></li>
+    <li><a href="#hallazgos">Lo que descubrimos</a></li>
+    <li><a href="#postmortem">Post‑mortem</a></li>
+    <li><a href="#quien">Quién hizo qué</a></li>
+    <li><a href="#preguntas">Preguntas probables</a></li>
+    <li><a href="#glosario">Glosario rápido</a></li>
+    <li><a href="#demo">Demo y links</a></li>
+  </ol>
+</nav>
+
+<section id="contexto">
+  <h2><span class="sec-num">1</span>De qué se trata GestIT</h2>
+  <p>Sistema web de <strong>gestión de activos de IT</strong>: inventario de equipos (notebooks, PCs, monitores, celulares), sus estados (Disponible, Asignado, En reparación, Dado de baja), entregas a empleados con actas numeradas, código QR por equipo y exportación a CSV. Dos roles: <strong>Administrador</strong> y <strong>Operador</strong>.</p>
+  <div class="linea">
+    <div class="v">V1</div>
+    <div class="c"><h3>Núcleo de inventario</h3><p>Login, roles, alta de equipos, búsqueda, cambio de estado, baja. 4 casos de prueba. Se encontró el BUG‑01 (el alta aceptaba campos de 1 carácter).</p></div>
+    <div class="v">V2</div>
+    <div class="c"><h3>MVP usable</h3><p>Corrige BUG‑01. Suma empleados, entregas y devoluciones con actas, QR, exportar CSV y módulos activables. 48 casos, todos PASS.</p></div>
+    <div class="v">V3</div>
+    <div class="c"><h3>Esta entrega</h3><p>Corrige 7 defectos de V2, suma editar equipos, usuarios y auditoría, y automatiza la regresión con Selenium. 78 casos: 75 PASS y 3 FAIL.</p></div>
+  </div>
+</section>
+
+<section id="v2">
+  <h2><span class="sec-num">2</span>Qué teníamos en V2</h2>
+  <p>Lo que se presentó en la Entrega 02 (todo esto <strong>ya existía</strong> antes de V3):</p>
+  <div class="tabla"><table>
+    <tr><th>HU</th><th>Funcionalidad</th></tr>
+    <tr><td>HU‑01, 02, 03</td><td>Iniciar y cerrar sesión, permisos por rol (con redirección <code>?next=</code> para el QR)</td></tr>
+    <tr><td>HU‑04, 06, 07</td><td>Alta de equipos con validaciones, ficha del equipo, búsqueda y filtros</td></tr>
+    <tr><td>HU‑08, 09</td><td>Cambio de estado (Reparar, Liberar) y baja</td></tr>
+    <tr><td>HU‑13, 14</td><td>Padrón de empleados: alta y baja</td></tr>
+    <tr><td>HU‑15, 16, 17</td><td>Entregas y devoluciones con actas AE‑/AD‑ imprimibles</td></tr>
+    <tr><td>HU‑18, 19</td><td>Código QR en la ficha y exportación CSV para etiquetas</td></tr>
+    <tr><td>HU‑20</td><td>Configuración: activar o desactivar módulos</td></tr>
+  </table></div>
+  <p><strong>Resultado de V2:</strong> 48 casos (43 nuevos, 4 de regresión de V1, 1 de confirmación de BUG‑01), <strong>todos PASS</strong> y ningún defecto nuevo. En el documento de V2 dejamos escrito que la edición de equipos, la administración de usuarios y la auditoría <strong>quedaban para V3</strong>.</p>
+</section>
+
+<section id="devolucion">
+  <h2><span class="sec-num">3</span>La devolución del profe</h2>
+  <div class="decir">
+    <span class="etq">Lo que nos marcó</span>
+    <p>"Con 100 % PASSED y ningún defecto en V2, faltó exploratorio con mirada de romper la aplicación. Por ejemplo, la HU‑01 dice que solo se aceptan rutas internas en <code>?next=</code>, pero con <code>?next=/\example.com</code> la app termina en example.com."</p>
+  </div>
+  <p><strong>Cómo respondimos:</strong> hicimos testing exploratorio con <strong>charters</strong> (sesiones con una misión concreta y tiempo fijo). Sobre V2 salieron 7 defectos (CH‑01 a CH‑05) y sobre V3 otros 2 (CH‑06 y CH‑07). Además de reproducir el caso del profe, encontramos una variante: con una tabulación (<code>?next=/%09/example.com</code>) también se salía del sistema.</p>
+</section>
+
+<section id="corregidos">
+  <h2><span class="sec-num">4</span>Defectos de V2 corregidos en V3</h2>
+  <p>Se reportaron con la plantilla del grupo, la IA los corrigió (un commit por defecto) y los confirmamos con casos que dieron PASS. <strong>Todos cerrados.</strong></p>
+  <div class="tabla"><table>
+    <tr><th>ID</th><th>Defecto</th><th>Sev.</th><th>Confirmación</th></tr>
+    <tr><td>BUG‑02</td><td>Redirección abierta en el login con <code>?next=/\dominio</code> o tabulación (el del profe)</td><td>Alta</td><td>TC‑49 <span class="pill ok">PASS</span></td></tr>
+    <tr><td>BUG‑03</td><td>La misma redirección, pero en el servidor (con sesión iniciada)</td><td>Alta</td><td>TC‑50 <span class="pill ok">PASS</span></td></tr>
+    <tr><td>BUG‑04</td><td>El CSV ejecutaba fórmulas en Excel (<code>=HYPERLINK…</code>)</td><td>Media</td><td>TC‑51 <span class="pill ok">PASS</span></td></tr>
+    <tr><td>BUG‑05</td><td>Por API, <code>empleadoId: true</code> entregaba el equipo a otra persona</td><td>Media</td><td>TC‑52 <span class="pill ok">PASS</span></td></tr>
+    <tr><td>BUG‑06</td><td>Login sin límite de intentos (fuerza bruta)</td><td>Media</td><td>TC‑53 <span class="pill ok">PASS</span></td></tr>
+    <tr><td>BUG‑07</td><td>El servidor no recortaba espacios del usuario</td><td>Baja</td><td>TC‑54 <span class="pill ok">PASS</span></td></tr>
+    <tr><td>BUG‑08</td><td>Un emoji contaba como 2 caracteres en los límites</td><td>Baja</td><td>TC‑55 <span class="pill ok">PASS</span></td></tr>
+    <tr><td>OBS‑01</td><td>Se aceptaba el N° de serie <code>----</code></td><td>—</td><td>TC‑56 <span class="pill ok">PASS</span></td></tr>
+  </table></div>
+  <p class="nota">BUG‑01 (de V1) ya se había corregido en V2. Su confirmación es el TC‑06, que en V3 queda automatizado en Selenium.</p>
+</section>
+
+<section id="nuevo">
+  <h2><span class="sec-num">5</span>Lo nuevo de V3</h2>
+  <p>Las tres HU que estaban en el backlog de la Entrega 01 y habían quedado afuera de V1 y V2:</p>
+  <div class="tabla"><table>
+    <tr><th>HU</th><th>Qué hace</th><th>Dónde se ve</th></tr>
+    <tr><td>HU‑05<br>Editar equipo</td><td>Cambiar marca, modelo, serie, categoría y observaciones con las mismas validaciones del alta. El código y el estado no se editan; un equipo dado de baja no se puede editar.</td><td>Botón <strong>Editar</strong> en el listado y la ficha</td></tr>
+    <tr><td>HU‑11<br>Usuarios</td><td>Alta, cambio de rol, activar/desactivar. <strong>Bloqueo</strong> de 15 minutos tras 5 intentos fallidos y botón Desbloquear. Siempre queda un Administrador activo.</td><td>Menú <strong>Usuarios</strong> (solo admin)</td></tr>
+    <tr><td>HU‑12<br>Auditoría</td><td>Registro de quién hizo qué y cuándo (logins, altas, ediciones con antes y después, entregas…), con filtros y páginas de 20. No se puede modificar ni borrar.</td><td>Menú <strong>Auditoría</strong> (solo admin)</td></tr>
+  </table></div>
+  <p><strong>Verificado contra el código de V2:</strong> no existía ninguna de las tres (no había rutas, pantallas ni botón Editar). La HU‑10 (categorías) quedó afuera para no sobrecargar la entrega.</p>
+</section>
+
+<section id="seleccion">
+  <h2><span class="sec-num">6</span>Selección de regresión y automatización</h2>
+  <p>De los <strong>48 casos de V1 y V2</strong>:</p>
+  <div class="tabla"><table>
+    <tr><th>Grupo</th><th class="num">Casos</th><th>Por qué</th></tr>
+    <tr><td><strong>Automatizados</strong> (Selenium)</td><td class="num">31</td><td>Los 27 de prioridad alta + 4 de valores límite. Se repiten en cada versión y el resultado se puede comparar sin una persona.</td></tr>
+    <tr><td><strong>Regresión manual</strong></td><td class="num">11</td><td>Tocan código que cambió en V3, o su resultado se mira a ojo (escanear el QR, el CSV en Excel, la ficha en un celular).</td></tr>
+    <tr><td><strong>No se ejecutan</strong></td><td class="num">6</td><td>Código sin cambios, prioridad Normal o Low y pantalla ya cubierta por otro caso.</td></tr>
+  </table></div>
+  <p><strong>Criterios para automatizar</strong> (de la clase de Automatización): frecuencia de ejecución (la regresión se repite siempre), criticidad, casos repetitivos (valores límite como data‑driven), oráculo automatizable (texto, estado o código HTTP) y ROI (Selenium es gratis y los <code>data-testid</code> del RNF‑08 hacen estables los scripts).</p>
+  <p><strong>No se automatiza</strong> lo exploratorio, la usabilidad ni lo que necesita un oráculo humano. Siguiendo la <strong>pirámide de Cohn</strong>, las reglas de negocio se verifican por API (rápido) y la pantalla solo para lo que ve el usuario.</p>
+</section>
+
+<section id="ejecucion">
+  <h2><span class="sec-num">7</span>Ejecución y resultados</h2>
+  <div class="tabla"><table>
+    <tr><th>Ejecución</th><th class="num">Casos</th><th class="num">PASS</th><th class="num">FAIL</th><th class="num">BLOCKED</th></tr>
+    <tr><td>Regresión automatizada (Selenium)</td><td class="num">31</td><td class="num">31</td><td class="num">0</td><td class="num">0</td></tr>
+    <tr><td>Casos nuevos de V3 (manual)</td><td class="num">34</td><td class="num">34</td><td class="num">0</td><td class="num">0</td></tr>
+    <tr><td>Regresión manual</td><td class="num">11</td><td class="num">10</td><td class="num">1</td><td class="num">0</td></tr>
+    <tr><td>Exploratorio (TC‑83, TC‑84)</td><td class="num">2</td><td class="num">0</td><td class="num">2</td><td class="num">0</td></tr>
+    <tr><td><strong>Total V3</strong></td><td class="num"><strong>78</strong></td><td class="num"><strong>75</strong></td><td class="num"><strong>3</strong></td><td class="num"><strong>0</strong></td></tr>
+  </table></div>
+  <p><strong>Por entrega:</strong> V1 4 de 4 PASS · V2 47 de 47 PASS · V3 75 de 78 PASS (96,2 %).</p>
+  <p><strong>Cambió de estado:</strong> el TC‑41 dio PASS en V2 y <span class="pill bad">FAIL en V3</span>. Los FAIL nuevos son TC‑83 y TC‑84, del exploratorio.</p>
+  <p><strong>Selenium:</strong> la primera corrida en la PC del equipo dio <strong>29 de 31</strong>. Fueron 2 falsos negativos del script (AUT‑01); se corrigió y la corrida oficial dio <strong>31 de 31</strong>.</p>
+  <p class="nota">Cuidado con la diferencia: el <strong>FAIL</strong> es el resultado de un caso; el <strong>defecto</strong> (o bug) es el problema en la app. El FAIL del TC‑41 se reportó como BUG‑10. El BUG‑09 apareció en un caso que dio PASS.</p>
+</section>
+
+<section id="hallazgos">
+  <h2><span class="sec-num">8</span>Lo que descubrimos en V3</h2>
+  <div class="tabla"><table>
+    <tr><th>ID</th><th>Qué pasa</th><th>Cómo apareció</th><th>Estado</th></tr>
+    <tr><td>BUG‑09</td><td>El CSV se abre en una sola columna en Excel en español (separador coma vs. punto y coma). Ya estaba en V2.</td><td>Ejecutando TC‑51, al abrir el archivo en Excel</td><td><span class="pill bad">Abierto</span></td></tr>
+    <tr><td>BUG‑10</td><td>En un celular (360 px) el menú del admin no entra y "Configuración" queda inaccesible. Regresión: V3 sumó 2 menús.</td><td>TC‑41, regresión manual <span class="pill bad">FAIL</span></td><td><span class="pill bad">Abierto</span></td></tr>
+    <tr><td>BUG‑11</td><td>Cualquiera que sepa un nombre de usuario puede bloquearlo; con el único admin, el sistema queda sin administración. <strong>Severidad alta.</strong></td><td>Exploratorio CH‑06 · TC‑83 <span class="pill bad">FAIL</span></td><td><span class="pill bad">Abierto</span></td></tr>
+    <tr><td>BUG‑12</td><td>El bloqueo revela qué usuarios existen: uno real responde 423 "bloqueado" y uno inexistente 401.</td><td>Exploratorio CH‑07 · TC‑84 <span class="pill bad">FAIL</span></td><td><span class="pill bad">Abierto</span></td></tr>
+    <tr><td>AUT‑01</td><td>2 falsos negativos de Selenium (el script esperaba sobre un elemento que la app ya había redibujado)</td><td>1.ª corrida automatizada</td><td><span class="pill ok">Corregido</span></td></tr>
+    <tr><td>TC‑77</td><td>Un caso tenía un resultado esperado incorrecto</td><td>Revisión antes de ejecutar</td><td><span class="pill ok">Corregido</span></td></tr>
+    <tr><td>4 obs.</td><td>Usabilidad: tabla que se estira con textos largos, aviso informativo en rojo, resultado viejo en pantalla en la auditoría</td><td>Ejecución manual</td><td><span class="pill neu">Registradas</span></td></tr>
+  </table></div>
+  <div class="decir">
+    <span class="etq">La frase más fuerte de la presentación</span>
+    <p>"El bloqueo que agregamos para corregir la fuerza bruta (BUG‑06) introdujo dos defectos nuevos. BUG‑12 permite averiguar qué usuarios existen y BUG‑11 permite bloquearlos: combinados, alguien sin ninguna contraseña puede dejar afuera a todos. Lo encontramos con exploratorio, que es lo que nos faltó en V2."</p>
+  </div>
+  <p><strong>Por qué quedan abiertos:</strong> la consigna pide corregir los defectos de V1 y V2 (hecho) y reportar lo que aparece en V3 (hecho). Los cuatro quedan para la próxima versión.</p>
+</section>
+
+<section id="postmortem">
+  <h2><span class="sec-num">9</span>Post‑mortem: por qué los casos no veían los defectos</h2>
+  <div class="tabla"><table>
+    <tr><th>Causa raíz</th><th>Defectos</th><th>Lección</th></tr>
+    <tr><td>Requerimiento incompleto</td><td>BUG‑04, 06, 09, OBS‑01</td><td>Revisar las HU con mirada de seguridad y de uso real</td></tr>
+    <tr><td>Validación de texto, no de significado</td><td>BUG‑02, 03</td><td>Probar variantes, no solo el criterio de aceptación</td></tr>
+    <tr><td>Navegador y servidor distintos</td><td>BUG‑05, 07</td><td>Un caso "por API" por cada campo</td></tr>
+    <tr><td>Detalle de implementación</td><td>BUG‑08</td><td>Sumar caracteres no ASCII a los valores límite</td></tr>
+    <tr><td>Caso ejecutado con un solo rol</td><td>BUG‑10</td><td>Ejecutar los casos de pantalla con cada rol</td></tr>
+    <tr><td>Corrección que introduce otro defecto</td><td>BUG‑11, 12</td><td>Explorar también lo que se acaba de corregir</td></tr>
+  </table></div>
+  <p>En V2 diseñamos casos que <strong>confirmaban</strong> los criterios de aceptación. Los defectos aparecieron cuando probamos con intención de romper y mirando el resultado real: Excel, un celular, otro rol, comparar un usuario real con uno inexistente.</p>
+</section>
+
+<section id="quien">
+  <h2><span class="sec-num">10</span>Quién hizo qué</h2>
+  <p>Conviene decirlo claro si preguntan; la consigna trabaja con un agente de IA:</p>
+  <ul>
+    <li><strong>Equipo (Santiago):</strong> ejecución manual de los 47 casos (34 de V3, 11 de regresión y 2 del exploratorio), las sesiones exploratorias CH‑06 y CH‑07, la corrida de Selenium en la PC del equipo y la revisión de los casos al ejecutarlos.</li>
+    <li><strong>IA (Claude):</strong> el código de V3 a partir de las HU y los reportes de defectos, los scripts de Selenium, y los borradores de las HU, los casos y los reportes.</li>
+    <li><strong>Exploratorio sobre V2</strong> (CH‑01 a CH‑05, de donde salieron BUG‑02 a BUG‑08): se hizo con asistencia de la IA durante el análisis, salvo el caso del profe.</li>
+  </ul>
+  <p class="nota">Equipo: Juan Ignacio Rua, Santiago Gorga y Santino Defilippo.</p>
+</section>
+
+<section id="preguntas">
+  <h2><span class="sec-num">11</span>Preguntas probables y cómo responder</h2>
+  <details><summary>¿Por qué casi todo da PASS?</summary><p>Porque 8 de los 34 casos nuevos son de confirmación: tienen que dar PASS para demostrar que los bugs se corrigieron. Los defectos aparecieron en la regresión (TC‑41) y en el exploratorio (TC‑83, TC‑84), y hay 4 defectos nuevos abiertos.</p></details>
+  <details><summary>¿Qué diferencia hay entre regresión y confirmación?</summary><p>Confirmación: volver a probar un defecto corregido para ver que se arregló (TC‑49 a TC‑56). Regresión: volver a ejecutar casos viejos para ver que lo nuevo no rompió lo que andaba (los 31 automatizados y los 11 manuales). El TC‑41 es el ejemplo: la regresión detectó que sumar dos menús rompió la vista en celular.</p></details>
+  <details><summary>¿Por qué automatizaron esos 31 y no otros?</summary><p>Todos los de prioridad alta (27) más 4 de valores límite. Son los que se repiten en cada versión y cuyo resultado se compara sin una persona. No automatizamos el QR (hay que escanearlo con un celular), el CSV en Excel ni la vista en 360 px, porque el oráculo es visual.</p></details>
+  <details><summary>¿La automatización siempre funcionó?</summary><p>No. La primera corrida en la PC del equipo dio 29 de 31: dos falsos negativos del script (AUT‑01), no de la app. Es la desventaja que vimos en clase: los tests automatizados también fallan y hay que mantenerlos.</p></details>
+  <details><summary>¿Por qué no corrigieron BUG‑09 a BUG‑12?</summary><p>La consigna pide corregir los defectos de V1 y V2, y eso está hecho y confirmado. Lo que aparece en V3 se reporta: quedan abiertos con su reporte, causa raíz y corrección propuesta para la próxima versión.</p></details>
+  <details><summary>¿Las funcionalidades nuevas no estaban ya en V2?</summary><p>No. Lo verificamos contra el código de V2: no había rutas ni pantallas de usuarios o auditoría ni botón Editar. En el documento de V2 figuraban como "fuera de alcance, queda para V3".</p></details>
+  <details><summary>¿Qué es un charter?</summary><p>Una sesión de testing exploratorio con una misión concreta, un tiempo fijo (15 minutos) y notas de lo que se probó. Por ejemplo, CH‑06: "¿se puede dejar al sistema sin administrador?".</p></details>
+  <details><summary>¿Cómo se aseguran de que los casos arranquen siempre igual?</summary><p>Con el RNF‑09: el servidor se reinicia o se llama a <code>POST /api/test/reset</code> antes de cada caso o bloque. Selenium lo hace automáticamente antes de cada test.</p></details>
+</section>
+
+<section id="glosario">
+  <h2><span class="sec-num">12</span>Glosario rápido</h2>
+  <dl class="glos">
+    <dt>FAIL</dt><dd>Resultado de un caso: lo obtenido no coincide con lo esperado.</dd>
+    <dt>Defecto / bug</dt><dd>El problema en el producto. Son sinónimos.</dd>
+    <dt>Confirmación</dt><dd>Re‑probar un defecto corregido para ver que se arregló.</dd>
+    <dt>Regresión</dt><dd>Re‑ejecutar casos viejos sobre la versión nueva para ver que no se rompió nada.</dd>
+    <dt>Exploratorio</dt><dd>Probar sin guion fijo, con intención de romper, guiado por un charter.</dd>
+    <dt>Falso negativo</dt><dd>El test falla pero la app funciona bien: el error está en el test.</dd>
+    <dt>Oráculo</dt><dd>Cómo se decide si un caso pasa: comparar lo esperado con lo obtenido.</dd>
+    <dt>Pirámide de Cohn</dt><dd>Muchos tests de bajo nivel (rápidos) y pocos de punta a punta (lentos).</dd>
+    <dt>Data‑driven</dt><dd>Un mismo script que recorre muchos datos (por ejemplo, valores límite).</dd>
+  </dl>
+</section>
+
+<section id="demo">
+  <h2><span class="sec-num">13</span>Demo y links</h2>
+  <p><strong>Antes de la clase:</strong> tener la app levantada y una ventana de incógnito abierta.</p>
+<pre>cd ~/GestIT-V3
+npm start            # la app en http://localhost:3000
+npm run test:ver     # los 31 casos de Selenium con el navegador visible</pre>
+  <p><strong>Qué mostrar en la demo</strong> (2 a 3 minutos):</p>
+  <ol>
+    <li>El caso del profe corregido: <code>/?next=/%5Cexample.com</code> ahora queda en el listado.</li>
+    <li>Editar un equipo y ver el registro en Auditoría con el antes y el después.</li>
+    <li>BUG‑11 en vivo: 5 contraseñas mal con <code>admin</code> y queda bloqueado sin que nadie lo pueda destrabar.</li>
+    <li><code>npm run test:ver</code> corriendo los 31 casos.</li>
+  </ol>
+  <p><strong>Dónde está todo</strong> (repo <code>github.com/santiagotgorga/GestIT-V3</code>, rama <code>v3</code>):</p>
+  <div class="tabla"><table>
+    <tr><th>Qué</th><th>Archivo</th></tr>
+    <tr><td>HU de V3</td><td><code>docs/V3/01-Requerimientos-V3.md</code></td></tr>
+    <tr><td>Reportes de defectos</td><td><code>docs/V3/02-Reportes-de-Defectos-V3.md</code></td></tr>
+    <tr><td>Selección de regresión y automatización</td><td><code>docs/V3/03-Seleccion-Regresion-y-Automatizacion.md</code></td></tr>
+    <tr><td>Casos de V3</td><td><code>docs/V3/04-Casos-de-Prueba-V3.md</code></td></tr>
+    <tr><td>Exploratorio de V3</td><td><code>docs/V3/07-Testing-Exploratorio-V3.md</code></td></tr>
+    <tr><td>Planilla (hoja "Resumen V3")</td><td><code>docs/V3/TPO - TC and Defect Template GRUPO12 - V3.xlsx</code></td></tr>
+    <tr><td>V2 tal como se entregó</td><td>rama <code>main</code></td></tr>
+  </table></div>
+</section>
+
+</div>
