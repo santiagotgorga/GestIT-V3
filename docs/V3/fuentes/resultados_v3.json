@@ -144,6 +144,10 @@
     "TC-13": {
       "estado": "PASS",
       "obtenido": "Categoría Notebook → EQ-00001 y EQ-00004 (\"2 equipos\"). + Estado En reparación → solo EQ-00004 (\"1 equipo\")."
+    },
+    "TC-14": {
+      "estado": "PASS",
+      "obtenido": "Buscar \"zzz\" → \"No se encontraron equipos con los filtros aplicados.\" con botón Limpiar filtros. Limpiar filtros → vuelven los 5 equipos y la búsqueda queda vacía."
     }
   }
 }
