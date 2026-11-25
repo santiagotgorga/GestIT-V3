@@ -28,6 +28,7 @@ def _manuales():
 
 
 MANUALES_RES, EJECUTOR = _manuales()
+ABIERTOS_V3 = ("BUG-09", "BUG-10")  # defectos encontrados en la ejecución de V3, entregados abiertos
 
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 DOCS = os.path.join(RAIZ, "docs", "V3")
@@ -151,12 +152,16 @@ def hoja_defecto(wb, plantilla, d):
     campos = [
         ("ID", d[0]), ("Title", d[1]), ("Description / Overview", d[2]),
         ("Reproduction Steps", "\n".join(d[3])), ("Expected Behavior", d[4]),
-        ("Actual Behavior (V2)", d[5]), ("Incidence / Severity / Probability of reproduction", d[6]),
+        ("Actual Behavior (V3)" if d[0] in ABIERTOS_V3 else "Actual Behavior (V2)", d[5]),
+        ("Incidence / Severity / Probability of reproduction", d[6]),
         ("Story and Acceptance Criteria affected", d[7]), ("Root cause", d[8]),
-        ("Confirmation testing (V3)", f"{d[9]} (caso de confirmación). Resultado: a completar al ejecutar."),
-        ("Status", "Corregido en V3 → pendiente de confirmación por QA."),
-        ("Browsers tested", "V2: Chromium 157 · curl"), ("Environment", "Entorno local (localhost:3000)."),
-        ("Notes", "Encontrado en la sesión de testing exploratorio con charters (ver 02-Reportes-de-Defectos-V3.md)."),
+        ("Confirmation testing (V3)", f"{d[9]}." if d[0] in ABIERTOS_V3
+         else f"{d[9]} (caso de confirmación): {MANUALES_RES.get(d[9], {}).get('estado', 'pendiente')}."),
+        ("Status", "Abierto: encontrado en la ejecución de V3, a corregir en la próxima versión."
+         if d[0] in ABIERTOS_V3 else "Corregido en V3 y confirmado por QA (ver caso de confirmación)."),
+        ("Browsers tested", "V3: Chrome en Windows (Santiago Gorga)" if d[0] in ABIERTOS_V3 else "V2: Chromium 157 · curl"), ("Environment", "Entorno local (localhost:3000)."),
+        ("Notes", "Encontrado en la ejecución manual de V3 (ver 02-Reportes-de-Defectos-V3.md)." if d[0] in ABIERTOS_V3
+         else "Encontrado en la sesión de testing exploratorio con charters sobre V2 (ver 02-Reportes-de-Defectos-V3.md)."),
     ]
     for i, (etiqueta, valor) in enumerate(campos):
         fila = 1 + i * 2
