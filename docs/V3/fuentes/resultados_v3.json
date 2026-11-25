@@ -148,6 +148,10 @@
     "TC-14": {
       "estado": "PASS",
       "obtenido": "Buscar \"zzz\" → \"No se encontraron equipos con los filtros aplicados.\" con botón Limpiar filtros. Limpiar filtros → vuelven los 5 equipos y la búsqueda queda vacía."
+    },
+    "TC-44": {
+      "estado": "PASS",
+      "obtenido": "Buscar \"zzz\" y Exportar CSV → \"No hay equipos para exportar con los filtros aplicados.\"; no se descarga ningún archivo."
     }
   }
 }
