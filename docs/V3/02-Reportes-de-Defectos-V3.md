@@ -2,7 +2,7 @@
 
 Testing de Aplicaciones · UADE · Grupo 12
 
-> **Estado:** BUG‑02 a BUG‑08 y OBS‑01 corregidos en V3 y **confirmados** (TC‑49 a TC‑56: PASS). BUG‑09 y BUG‑10, encontrados en la ejecución de V3, quedan **abiertos**. AUT‑01 (falso negativo de los scripts) corregido y confirmado. Los campos siguen la hoja "Defect Report - Template" de la
+> **Estado:** BUG‑02 a BUG‑08 y OBS‑01 corregidos en V3 y **confirmados** (TC‑49 a TC‑56: PASS). BUG‑09, BUG‑10 y BUG‑11, encontrados en la ejecución y el exploratorio de V3, quedan **abiertos**. AUT‑01 (falso negativo de los scripts) corregido y confirmado. Los campos siguen la hoja "Defect Report - Template" de la
 > plantilla del grupo, con los mismos agregados que BUG‑01 (Root cause, Confirmation testing, Status).
 > Después se pasan a la planilla Excel.
 
@@ -207,6 +207,24 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Confirmation testing** | Volver a ejecutar TC‑41 como Administrador (y como Operador) cuando se aplique la corrección. |
 | **Status** | **Abierto** (a corregir en la próxima versión). |
 | **Browsers tested** | Chrome (vista de dispositivo 360 × 740) |
+| **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
+
+## Defect Report – BUG‑11
+
+| Campo | Valor |
+|---|---|
+| **ID** | BUG‑11 |
+| **Title** | Cualquiera que conozca un nombre de usuario puede bloquear esa cuenta; con el único Administrador, el sistema queda sin administración. |
+| **Description / Overview** | El bloqueo de HU‑11 (5 intentos fallidos → 15 minutos) se aplica a la **cuenta**, sin importar quién hace los intentos. No hace falta saber la contraseña: alcanza con conocer el nombre de usuario (`admin` es el de los datos de prueba) para bloquearla, a mano o con un script, y repetirlo cada 15 minutos. Si la cuenta es la del **único Administrador**, nadie puede desbloquearla desde el sistema, porque el Operador no tiene acceso a Usuarios: el sistema queda sin nadie que pueda administrar usuarios, ver la auditoría ni configurar módulos. |
+| **Reproduction Steps** | 1- Reiniciar el servidor (admin es el único Administrador). <br>2- En el login, ingresar 5 veces `admin` / `x`. <br>3- Ingresar con `admin` / `admin123` → mensaje de bloqueo. <br>4- Como operador: no aparece Usuarios; `POST /api/usuarios/admin/desbloquear` → 403. |
+| **Expected Behavior** | Un tercero no puede dejar al sistema sin administración. El bloqueo frena la fuerza bruta sin impedir que el Administrador legítimo recupere el acceso (por ejemplo, demora progresiva entre intentos, bloqueo por origen o un Administrador de respaldo). |
+| **Actual Behavior (V3)** | `admin` queda bloqueado 15 minutos y nadie lo puede desbloquear; el ataque se puede repetir indefinidamente. |
+| **Incidence / Severity / Probability of reproduction** | Severidad **Alta** (seguridad: denegación de servicio sobre la administración del sistema) / 100 %. |
+| **Story and Acceptance Criteria affected** | HU‑11 (regla de bloqueo), HU‑01. |
+| **Root cause** | Requerimiento incompleto: la HU‑11 definió el bloqueo para frenar la fuerza bruta (corrección de BUG‑06) sin contemplar que también sirve para bloquear cuentas ajenas. La corrección de un defecto introdujo otro. |
+| **Cómo se encontró** | Sesión de testing exploratorio **CH‑06** sobre V3, Santiago Gorga. Caso que lo demuestra: **TC‑83 (FAIL)**. |
+| **Status** | **Abierto** (a corregir en la próxima versión). |
+| **Browsers tested** | Chrome (incógnito) y Edge · curl |
 | **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
 
 ---

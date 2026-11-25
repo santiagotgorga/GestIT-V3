@@ -47,8 +47,9 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 | TC-80 | El registro de auditoría es inmutable. | HU-12 | Nuevo V3 | Predicción de errores (API) | High |
 | TC-81 | El Operador no accede a la auditoría. | HU-12, HU-03 | Nuevo V3 | Tabla de decisión (rol × acción) | High |
 | TC-82 | La edición de un equipo queda auditada con antes y después. | HU-12, HU-05 | Nuevo V3 | Caso de uso | Normal |
+| TC-83 | Bloquear al único Administrador no debe dejar al sistema sin administración. | HU-11, HU-01 | Exploratorio V3 | Exploratorio con charter (CH-06) + predicción de errores | High |
 
-**Total: 34 casos** (8 de confirmación y 26 nuevos de V3).
+**Total: 35 casos** (8 de confirmación y 27 nuevos de V3).
 
 ## TC-49 · Confirmación BUG-02: ?next= con barra invertida o tabulación no sale del sistema.
 
@@ -485,3 +486,16 @@ datos con `POST /api/test/reset` (RNF‑09), salvo que el caso diga otra cosa.
 |---|---|---|
 | 1 | Editar EQ-00003 y cambiar la Marca a LG. | "Equipo EQ-00003 actualizado correctamente." |
 | 2 | Abrir Auditoría. | EQUIPO_EDICION · admin · EQ-00003 · Marca: "Samsung" → "LG". |
+
+## TC-83 · Bloquear al único Administrador no debe dejar al sistema sin administración.
+
+- **HU cubiertas:** HU-11, HU-01 · **Prioridad:** High · **Tipo:** Exploratorio V3
+- **Técnica de diseño:** Exploratorio con charter (CH-06) + predicción de errores
+- **Prerrequisitos:** Servidor recién iniciado: admin es el único Administrador. Sin sesión iniciada; navegador B con operador.
+- **Datos de prueba:** `Usuario atacado = admin` · `Contraseña usada por el atacante = x` · `Contraseña real = admin123`
+
+| Paso | Acción | Resultado esperado |
+|---|---|---|
+| 1 | Sin conocer la contraseña, intentar 5 veces admin / x desde el login. | El sistema no queda sin administración: el Administrador legítimo puede seguir ingresando o existe una forma de recuperarlo (otro Administrador, demora progresiva, etc.). |
+| 2 | Ingresar con admin / admin123. | Ingresa. |
+| 3 | Como operador, intentar desbloquear a admin (pantalla Usuarios o POST /api/usuarios/admin/desbloquear). | No corresponde que el Operador pueda (HU-03), por eso el sistema tiene que ofrecer otra vía. |

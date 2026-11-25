@@ -28,7 +28,7 @@ def _manuales():
 
 
 MANUALES_RES, EJECUTOR = _manuales()
-ABIERTOS_V3 = ("BUG-09", "BUG-10")
+ABIERTOS_V3 = ("BUG-09", "BUG-10", "BUG-11")
 AUTO_RES = {}  # defectos encontrados en la ejecución de V3, entregados abiertos
 
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))

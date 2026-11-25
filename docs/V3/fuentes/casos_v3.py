@@ -288,6 +288,19 @@ CASOS = [
          ]),
 ]
 
+CASOS.append(
+    dict(id="TC-83", desc="Bloquear al único Administrador no debe dejar al sistema sin administración.",
+         hu="HU-11, HU-01", prioridad="High", tipo="Exploratorio V3",
+         tecnica="Exploratorio con charter (CH-06) + predicción de errores",
+         pre=["Servidor recién iniciado: admin es el único Administrador.", "Sin sesión iniciada; navegador B con operador."],
+         datos=["Usuario atacado = admin", "Contraseña usada por el atacante = x", "Contraseña real = admin123"],
+         pasos=[
+             ("Sin conocer la contraseña, intentar 5 veces admin / x desde el login.", "El sistema no queda sin administración: el Administrador legítimo puede seguir ingresando o existe una forma de recuperarlo (otro Administrador, demora progresiva, etc.)."),
+             ("Ingresar con admin / admin123.", "Ingresa."),
+             ("Como operador, intentar desbloquear a admin (pantalla Usuarios o POST /api/usuarios/admin/desbloquear).", "No corresponde que el Operador pueda (HU-03), por eso el sistema tiene que ofrecer otra vía."),
+         ])
+)
+
 DEFECTOS = [
     # id, título, descripción corta, pasos, esperado, obtenido, severidad, HU, causa, confirmación
     ("BUG-02", "Redirección abierta en el login con ?next=/\\dominio o con tabulación.",
@@ -340,4 +353,11 @@ DEFECTOS = [
      "\"Auditoría\" se corta y \"Configuración\" queda fuera de la pantalla, sin forma de acceder.",
      "Media / 100 % con el rol Administrador en 360 px", "HU-18 (criterio 3), RNF-03",
      "Regresión introducida en V3: al agregar los menús de HU-11 y HU-12 no se revisó el encabezado en 360 px.", "TC-41 (pendiente: defecto abierto)"),
+    ("BUG-11", "Cualquiera que conozca un nombre de usuario puede bloquear esa cuenta; con el único Administrador, el sistema queda sin administración.",
+     "El bloqueo de HU-11 (5 intentos fallidos → 15 minutos) se aplica a la cuenta sin importar quién intenta. No hace falta saber la contraseña: con conocer el nombre (admin es el de los datos de prueba) alcanza para bloquearla, a mano o con un script, y repetirlo cada 15 minutos. Si la cuenta es la del único Administrador, nadie puede desbloquearla desde el sistema: el Operador no tiene acceso a Usuarios (403). Encontrado en la sesión exploratoria CH-06.",
+     ["1- Reiniciar el servidor (admin es el único Administrador)", "2- En el login, ingresar 5 veces admin / x", "3- Ingresar con admin / admin123 → bloqueado", "4- Como operador: sin menú Usuarios; POST /api/usuarios/admin/desbloquear → 403"],
+     "Un tercero no puede dejar al sistema sin administración: el bloqueo no impide al Administrador legítimo recuperar el acceso (por ejemplo, demora progresiva, bloqueo por origen, o un Administrador de respaldo).",
+     "admin queda bloqueado 15 minutos y nadie puede desbloquearlo; el ataque se puede repetir indefinidamente.",
+     "Alta (seguridad: denegación de servicio sobre la administración) / 100 %", "HU-11, HU-01 (regla de bloqueo)",
+     "Requerimiento incompleto: la HU-11 definió el bloqueo para frenar la fuerza bruta (BUG-06) sin contemplar que también sirve para bloquear cuentas ajenas.", "TC-83 (FAIL)"),
 ]
