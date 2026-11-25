@@ -164,6 +164,10 @@
     "TC-26": {
       "estado": "PASS",
       "obtenido": "Email \"martin@empresa\" y \"martin.empresa.com\" → \"Ingresá un email válido.\"; nombre \"M4rtin\" → \"El nombre debe tener entre 2 y 50 caracteres y solo letras.\". No se creó ningún empleado."
+    },
+    "TC-39": {
+      "estado": "PASS",
+      "obtenido": "La ficha de EQ-00002 muestra el panel \"Código QR\". Escaneado con la cámara del celular: el link termina en /equipo.html?codigo=EQ-00002."
     }
   }
 }
