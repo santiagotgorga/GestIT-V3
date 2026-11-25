@@ -152,6 +152,10 @@
     "TC-44": {
       "estado": "PASS",
       "obtenido": "Buscar \"zzz\" y Exportar CSV → \"No hay equipos para exportar con los filtros aplicados.\"; no se descarga ningún archivo."
+    },
+    "TC-43": {
+      "estado": "PASS",
+      "obtenido": "Categoría Notebook → Exportar CSV. El archivo (UTF-8 con BOM) tiene el encabezado codigo,marca,modelo,numero_serie,categoria,estado y solo EQ-00001 (Dell) y EQ-00004 (HP); acentos correctos."
     }
   }
 }
