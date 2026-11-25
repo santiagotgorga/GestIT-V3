@@ -130,24 +130,55 @@ async function elegir(driver, id, valor) {
   );
 }
 
-async function texto(driver, id) {
+// La app redibuja tablas y paneles después de cada acción: un elemento ya ubicado puede
+// quedar "viejo" (StaleElementReferenceError). Por eso estas funciones vuelven a buscar
+// el elemento en cada intento en lugar de guardar la referencia.
+async function textoActual(driver, id) {
+  for (let intento = 0; intento < 5; intento++) {
+    try {
+      return (await (await esperar(driver, id)).getText()).trim();
+    } catch (error) {
+      if (error.name !== "StaleElementReferenceError") throw error;
+    }
+  }
   return (await (await esperar(driver, id)).getText()).trim();
 }
 
+async function texto(driver, id) {
+  return textoActual(driver, id);
+}
+
 async function existe(driver, id) {
-  const els = await driver.findElements(tid(id));
-  for (const el of els) {
-    if (await el.isDisplayed()) return true;
+  for (let intento = 0; intento < 5; intento++) {
+    try {
+      const els = await driver.findElements(tid(id));
+      for (const el of els) {
+        if (await el.isDisplayed()) return true;
+      }
+      return false;
+    } catch (error) {
+      if (error.name !== "StaleElementReferenceError") throw error;
+    }
   }
   return false;
 }
 
 // Espera hasta que el texto del elemento contenga lo esperado
 async function esperarTexto(driver, id, esperado) {
-  const el = await esperar(driver, id);
-  await driver.wait(async () => (await el.getText()).includes(esperado), ESPERA,
-    `[data-testid="${id}"] no contiene "${esperado}"`);
-  return (await el.getText()).trim();
+  let ultimo = "";
+  await driver.wait(async () => {
+    try {
+      const els = await driver.findElements(tid(id));
+      for (const el of els) {
+        ultimo = await el.getText();
+        if (ultimo.includes(esperado)) return true;
+      }
+    } catch (error) {
+      if (error.name !== "StaleElementReferenceError") throw error;
+    }
+    return false; // no está todavía o se redibujó: se vuelve a buscar
+  }, ESPERA, `[data-testid="${id}"] no contiene "${esperado}" (último texto: "${ultimo}")`);
+  return textoActual(driver, id);
 }
 
 async function aceptarConfirmacion(driver) {

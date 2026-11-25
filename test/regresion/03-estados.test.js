@@ -23,9 +23,16 @@ describe("Cambio de estado de equipos", function () {
     await t.esperarTexto(d, "estado-EQ-00001", "En reparación");
 
     await t.clic(d, "link-ficha-EQ-00001");
-    const primeraFila = await (await t.esperar(d, "tabla-historial-estados"))
-      .findElement(By.css("tbody tr:first-child"));
-    assert.match(await primeraFila.getText(), /No enciende la pantalla/);
+    await t.esperar(d, "tabla-historial-estados");
+    // Se vuelve a buscar la fila en cada intento por si la ficha se redibuja
+    await d.wait(async () => {
+      try {
+        const fila = await d.findElement(By.css('[data-testid="tabla-historial-estados"] tbody tr:first-child'));
+        return /No enciende la pantalla/.test(await fila.getText());
+      } catch (error) {
+        return false;
+      }
+    }, t.ESPERA, "La primera fila del historial no muestra el motivo");
   });
 
   it("TC-16 · Valores límite del motivo (9, 10, 500 y 501 caracteres) [data-driven]", async () => {
@@ -48,10 +55,13 @@ describe("Cambio de estado de equipos", function () {
     // 501 caracteres -> el campo admite como máximo 500 (atributo maxlength)
     await abrirReparar(d, "EQ-00002");
     const motivo = await t.esperar(d, "input-motivo");
+    assert.equal(await motivo.getAttribute("maxlength"), "500", "El motivo debe limitarse a 500 caracteres");
     await motivo.sendKeys("x".repeat(501));
-    assert.equal((await motivo.getAttribute("value")).length, 500);
+    const largoTipeado = (await motivo.getAttribute("value")).length;
+    assert.ok(largoTipeado <= 500, `El campo aceptó ${largoTipeado} caracteres (máximo 500)`);
 
     // 500 caracteres -> se aplica
+    await t.escribir(d, "input-motivo", "x".repeat(500));
     await t.clic(d, "btn-confirmar-estado");
     await t.esperarTexto(d, "estado-EQ-00002", "En reparación");
 

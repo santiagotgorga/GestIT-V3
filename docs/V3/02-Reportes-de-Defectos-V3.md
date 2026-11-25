@@ -188,3 +188,21 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Browsers tested** | Chrome (incógnito) · Microsoft Excel (Windows, configuración regional Argentina) |
 | **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
 | **Notes** | Corrección propuesta: ver el mensaje de seguimiento (separador punto y coma, o selector de separador). |
+
+---
+
+# Defectos de los scripts de prueba automatizados
+
+## AUT-01 · Falsos negativos en TC‑15 y TC‑16 (Selenium)
+
+| Campo | Valor |
+|---|---|
+| **ID** | AUT‑01 |
+| **Title** | TC‑15 y TC‑16 fallan con `StaleElementReferenceError` aunque la app funciona bien. |
+| **Cómo se encontró** | Primera corrida de `npm run test:reporte` en la PC del equipo (Windows, Chrome 158): 29 de 31 PASS. |
+| **Descripción** | Los scripts guardaban la referencia al elemento "estado" de la fila y esperaban que cambiara a "En reparación". Pero después de cada acción la app redibuja la tabla: el elemento guardado deja de existir y Selenium lanza `StaleElementReferenceError`. En el entorno donde se desarrollaron los scripts el orden de los tiempos era otro y no se manifestaba. |
+| **Tipo** | **Falso negativo**: el test falla sin que haya un defecto en la aplicación. La clase de Automatización lo menciona como una desventaja ("la automatización puede introducir errores: falsos positivos / falsos negativos"). |
+| **Causa raíz** | Defecto del script: espera sobre una referencia vieja en lugar de volver a buscar el elemento. |
+| **Corrección** | `esperarTexto`, `texto` y `existe` (test/soporte/entorno.js) vuelven a buscar el elemento en cada intento. TC‑16 verifica el límite de 500 con el atributo `maxlength` en vez de depender de tipear 501 teclas. |
+| **Confirmación** | 5 corridas seguidas con 31 de 31 PASS; volver a correr `npm run test:reporte` en la PC del equipo. |
+| **Status** | Corregido → pendiente de confirmación en la PC del equipo. |
