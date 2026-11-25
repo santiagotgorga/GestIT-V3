@@ -71,13 +71,14 @@ npm run test:reporte
 | Regresión automatizada (Selenium) | 31 | 31 | 0 | 0 |
 | Casos nuevos de V3 (manual, TC‑49 a TC‑82) | 34 | 34 | 0 | 0 |
 | Regresión manual (11 casos de V1/V2) | 11 | 10 | **1** | 0 |
-| **Total** | **76** | **75** | **1** | **0** |
+| Testing exploratorio (TC‑83, TC‑84) | 2 | 0 | **2** | 0 |
+| **Total** | **78** | **75** | **3** | **0** |
 
 La ejecución manual la hizo Santiago, caso por caso; los resultados están en la planilla con lo que se vio en cada
 uno. La primera corrida de Selenium en la PC de Santiago dio **29/31**: fueron 2 falsos negativos del script
 (AUT‑01), que se corrigieron, y la segunda corrida dio 31/31.
 
-**Cambió de estado:** TC‑41 dio PASS en V2 y **FAIL en V3**.
+**Cambió de estado:** TC‑41 dio PASS en V2 y **FAIL en V3**. **FAIL nuevos:** TC‑83 y TC‑84, del exploratorio.
 
 **Hallazgos de la ejecución de V3:**
 
@@ -85,18 +86,19 @@ uno. La primera corrida de Selenium en la PC de Santiago dio **29/31**: fueron 2
 |---|---|---|
 | **BUG‑09** | El CSV se abre en una sola columna en Excel en español (ya pasaba en V2 y nadie lo vio) | **Abierto** |
 | **BUG‑10** | En un celular (360 px) el menú del admin no entra y "Configuración" queda inaccesible: regresión que trajo V3 al sumar 2 menús | **Abierto** |
+| **BUG‑11** | Cualquiera que sepa un nombre de usuario puede bloquearlo; con el único admin, el sistema queda sin administración (severidad Alta) | **Abierto** |
+| **BUG‑12** | El bloqueo revela qué usuarios existen (un usuario real se bloquea y uno inexistente no) | **Abierto** |
 | AUT‑01 | Falsos negativos de Selenium (TC‑15, TC‑16) | Corregido |
 | TC‑77 | Un caso tenía un resultado esperado incorrecto | Corregido antes de ejecutar |
 | 4 observaciones | Usabilidad: tabla que se estira con textos largos, aviso informativo en rojo, resultado viejo en pantalla en la auditoría | Registradas |
 
-BUG‑09 y BUG‑10 se entregan **abiertos** a propósito: son defectos reales encontrados en V3, para la próxima
-versión.
+BUG‑09 a BUG‑12 se entregan **abiertos** a propósito: son defectos reales encontrados en V3, para la próxima
+versión. BUG‑11 y BUG‑12 salieron del testing exploratorio (`07-Testing-Exploratorio-V3.md`): el bloqueo que
+corrigió el BUG‑06 introdujo dos defectos nuevos.
 
 ## 5. Qué falta
 
-1. **Testing exploratorio (mañana).** Hay 2 charters sobre lo nuevo que probablemente den defectos reales:
-   - Con 5 contraseñas incorrectas se bloquea al único admin: ¿alguien lo puede destrabar?
-   - Un usuario real se bloquea y uno inexistente no: eso revela qué usuarios existen (la HU‑01 dice lo contrario).
+1. ~~Testing exploratorio~~ Hecho (CH‑06 y CH‑07): BUG‑11 y BUG‑12.
 2. **Crear la etiqueta `v2.0`** en GitHub (Releases → Create a new release → tag `v2.0` sobre `main`).
 3. **Repasar la presentación** y repartir quién presenta cada parte (hay un guion en `05-Guia-Presentacion.md`).
 4. **Mergear el pull request** `v3 → main` y, si queremos, llevar la rama al repo de Juan.
@@ -111,3 +113,4 @@ versión.
 | `04-Casos-de-Prueba-V3.md` | Los 34 casos nuevos |
 | `05-Guia-Presentacion.md` | Objetivos de la consigna, guion y post‑mortem |
 | `06-Guia-Ejecucion-Manual.md` | Paso a paso para ejecutar los casos (con comandos de API) |
+| `07-Testing-Exploratorio-V3.md` | Sesiones exploratorias CH‑06 y CH‑07 |
