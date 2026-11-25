@@ -604,6 +604,7 @@ textarea {
 
 .main-nav {
   display: flex;
+  flex-wrap: wrap; /* BUG-10: en pantallas angostas el menú del Administrador pasa a dos renglones */
   gap: 6px;
 }
 
