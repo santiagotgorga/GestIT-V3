@@ -160,6 +160,10 @@
     "TC-08": {
       "estado": "PASS",
       "obtenido": "Serie \"AB 12\" y \"AB#12\" → \"El número de serie solo admite letras, números y guiones.\"; \"----\" (agregado en V3) → \"El número de serie debe contener al menos una letra o un número.\". No se creó ningún equipo."
+    },
+    "TC-26": {
+      "estado": "PASS",
+      "obtenido": "Email \"martin@empresa\" y \"martin.empresa.com\" → \"Ingresá un email válido.\"; nombre \"M4rtin\" → \"El nombre debe tener entre 2 y 50 caracteres y solo letras.\". No se creó ningún empleado."
     }
   }
 }
