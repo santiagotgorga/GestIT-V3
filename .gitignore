@@ -1,0 +1,9 @@
+# Dependencias: se instalan con `npm install`
+node_modules/
+
+# Resultados generados por `npm run test:reporte` y capturas de fallos
+reportes/
+
+# Archivos temporales
+para-descargar/
+.DS_Store

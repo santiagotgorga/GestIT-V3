@@ -939,3 +939,26 @@ body {
   align-items: center;
   gap: 12px;
 }
+
+/* ===== V3: auditoría (HU-12) y usuarios (HU-11) ===== */
+.auditoria-filtros {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) 2fr auto;
+}
+
+.paginacion {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 22px 18px;
+}
+
+.status-badge.blocked {
+  background: #fde8e8;
+  color: #b42318;
+}
+
+@media (max-width: 900px) {
+  .auditoria-filtros {
+    grid-template-columns: 1fr 1fr;
+  }
+}

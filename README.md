@@ -1,6 +1,10 @@
-# GestIT V2
+# GestIT V3
 
-GestIT - Gestión de activos de IT (V2). Trabajo práctico del Grupo 12 para la materia **Testing de Aplicaciones**.
+GestIT - Gestión de activos de IT (V3). Trabajo práctico del Grupo 12 para la materia **Testing de Aplicaciones**.
+
+> **Novedades de V3:** edición de equipos (HU-05), administración de usuarios con bloqueo por intentos fallidos
+> (HU-11), registro de auditoría (HU-12), corrección de los defectos BUG-02 a BUG-08 y regresión automatizada
+> con Selenium. La V2 entregada queda en la rama `main` y en la etiqueta `v2.0`.
 
 ## Requisitos
 
@@ -29,7 +33,7 @@ git --version
    git clone https://github.com/jrua182/GestITV2-Testing-de-Aplicaciones.git
    cd GestITV2-Testing-de-Aplicaciones
    ```
-4. Instalar dependencias (el repo ya incluye `node_modules`, pero conviene correrlo igual):
+4. Instalar dependencias (obligatorio: desde V3 el repo ya no incluye `node_modules`):
    ```bash
    npm install
    ```
@@ -87,6 +91,37 @@ npm run dev
 |------------|---------------|---------------|
 | `admin`    | `admin123`    | Administrador |
 | `operador` | `operador123` | Operador      |
+
+Desde V3, 5 intentos fallidos seguidos bloquean al usuario 15 minutos. Para destrabarlo: un Administrador lo
+desbloquea desde **Usuarios**, o se reinicia el servidor.
+
+## Tests automatizados de regresión (Selenium)
+
+Requisito: tener **Google Chrome** instalado. Selenium descarga solo el ChromeDriver que corresponde.
+
+```bash
+npm test
+```
+
+| Comando | Qué hace |
+|---|---|
+| `npm test` | Corre los 31 casos de regresión automatizados (sin ventana, ≈ 35 s). |
+| `npm run test:ver` | Lo mismo, pero se ve el navegador mientras trabaja (ideal para la presentación). |
+| `npm run test:reporte` | Genera `reportes/reporte-regresion.html` con el resultado de cada caso y gráficos. |
+
+Los tests levantan su propio servidor en el puerto 3100 (no hace falta tener `npm start` corriendo) y restauran
+los datos antes de cada caso. Si un caso falla, queda una captura en `reportes/capturas/`.
+
+## Documentación de V3
+
+| Documento | Contenido |
+|---|---|
+| `docs/V3/01-Requerimientos-V3.md` | HU nuevas y modificadas de V3 |
+| `docs/V3/02-Reportes-de-Defectos-V3.md` | BUG-02 a BUG-08 (testing exploratorio) |
+| `docs/V3/03-Seleccion-Regresion-y-Automatizacion.md` | Qué casos de V1/V2 se ejecutan y cuáles se automatizan, y por qué |
+| `docs/V3/04-Casos-de-Prueba-V3.md` | 34 casos nuevos (TC-49 a TC-82) |
+| `docs/V3/05-Guia-Presentacion.md` | Objetivos de la Entrega 03 y dónde está cada cosa |
+| `docs/V3/TPO - TC and Defect Template GRUPO12 - V3.xlsx` | Planilla del grupo con los casos, defectos y el resumen con gráfico |
 
 ## Restaurar datos para pruebas (RNF-09)
 

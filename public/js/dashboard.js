@@ -134,21 +134,23 @@ function limpiarFiltros() {
 function validarEquipo(datos) {
   const errores = {};
 
-  if (datos.marca.length < 2 || datos.marca.length > 50) {
+  if (largo(datos.marca) < 2 || largo(datos.marca) > 50) {
     errores.marca = "La marca debe tener entre 2 y 50 caracteres.";
   }
-  if (datos.modelo.length < 2 || datos.modelo.length > 80) {
+  if (largo(datos.modelo) < 2 || largo(datos.modelo) > 80) {
     errores.modelo = "El modelo debe tener entre 2 y 80 caracteres.";
   }
-  if (datos.numeroSerie.length < 4 || datos.numeroSerie.length > 40) {
+  if (largo(datos.numeroSerie) < 4 || largo(datos.numeroSerie) > 40) {
     errores.numeroSerie = "El número de serie debe tener entre 4 y 40 caracteres.";
   } else if (!/^[A-Za-z0-9-]+$/.test(datos.numeroSerie)) {
     errores.numeroSerie = "El número de serie solo admite letras, números y guiones.";
+  } else if (!/[A-Za-z0-9]/.test(datos.numeroSerie)) {
+    errores.numeroSerie = "El número de serie debe contener al menos una letra o un número.";
   }
   if (!datos.categoria) {
     errores.categoria = "Seleccioná una categoría.";
   }
-  if (datos.observaciones.length > 500) {
+  if (largo(datos.observaciones) > 500) {
     errores.observaciones = "Las observaciones admiten hasta 500 caracteres.";
   }
 

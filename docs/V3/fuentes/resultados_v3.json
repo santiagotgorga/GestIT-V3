@@ -1,0 +1,193 @@
+{
+  "ejecutado_por": "Santiago Gorga",
+  "resultados": {
+    "TC-49": {
+      "estado": "PASS",
+      "obtenido": "Pasos 1 a 4 → listado de equipos (/dashboard), sin salir a example.com y sin ejecutar scripts. Paso 5 → ficha de EQ-00002. Ejecutado en ventana de incógnito: en la ventana normal el paso 5 iba al listado por archivos viejos en la caché de Chrome (versión anterior de la app)."
+    },
+    "TC-50": {
+      "estado": "PASS",
+      "obtenido": "Con sesión iniciada, /?next=/%5Cexample.com muestra el listado y la URL sigue en localhost; /?next=/equipo.html?codigo=EQ-00002 abre la ficha de EQ-00002."
+    },
+    "TC-51": {
+      "estado": "PASS",
+      "obtenido": "Bloc de notas: la marca se exporta como '=HYPERLINK(...) (con apóstrofo adelante). Excel: no se ejecuta ninguna fórmula; después de 'Texto en columnas' por coma, la celda de la marca se ve como texto plano. Observación: al abrir el CSV con doble clic, Excel (configuración regional de Argentina) deja toda la fila en la columna A porque espera punto y coma; se reportó como BUG-09."
+    },
+    "TC-52": {
+      "estado": "PASS",
+      "obtenido": "empleadoId true, \"0x2\", 1.5 y \"2abc\" → HTTP 400 \"Seleccioná un empleado.\"; EQ-00002 siguió Disponible. Con empleadoId 2 → HTTP 201, acta AE-000002, EQ-00002 Asignado a Pérez, Carlos."
+    },
+    "TC-53": {
+      "estado": "PASS",
+      "obtenido": "Intentos 1 a 4 con operador / x → \"Usuario o contraseña incorrectos.\". 5.º intento → \"Usuario bloqueado por intentos fallidos. Intentá más tarde o contactá a un Administrador.\". Con la contraseña correcta (operador123) → mismo mensaje de bloqueo; no ingresa."
+    },
+    "TC-54": {
+      "estado": "PASS",
+      "obtenido": "POST /api/login con {\"usuario\":\" admin \",\"password\":\"admin123\"} → HTTP 200 \"Login correcto.\" (usuario admin, rol Administrador)."
+    },
+    "TC-55": {
+      "estado": "PASS",
+      "obtenido": "Marca de 30 emojis → se creó EQ-00006. Marca de 51 emojis → \"La marca debe tener entre 2 y 50 caracteres.\" y no se creó. Observación (usabilidad): una marca larga sin espacios estira la columna y el listado necesita scroll horizontal."
+    },
+    "TC-56": {
+      "estado": "PASS",
+      "obtenido": "Serie \"----\" → \"El número de serie debe contener al menos una letra o un número.\" y no se creó. Serie \"A----\" → se creó EQ-00007."
+    },
+    "TC-57": {
+      "estado": "PASS",
+      "obtenido": "4 intentos fallidos con operador / x → \"Usuario o contraseña incorrectos.\". Login correcto con operador123 → ingresó. 4 intentos fallidos más → errores normales, sin bloqueo: el contador se reinició."
+    },
+    "TC-58": {
+      "estado": "PASS",
+      "obtenido": "10 intentos con juan / x por API → las 10 respuestas: HTTP 401 \"Usuario o contraseña incorrectos.\"; nunca el mensaje de bloqueo (423)."
+    },
+    "TC-59": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00001: modal con datos precargados; Modelo → Latitude 5430 → \"Equipo EQ-00001 actualizado correctamente.\". Ficha: Dell Latitude 5430, código EQ-00001 y estado Disponible sin cambios; el historial de estados sigue con una sola fila (Alta del equipo)."
+    },
+    "TC-60": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00001 con serie LN001 → \"Ya existe un equipo con ese número de serie.\", no se guarda. Con \" ln001 \" → mismo error. Con su propia serie DL001 y Observaciones \"Prueba TC-60\" → se guardó; la ficha muestra la observación."
+    },
+    "TC-61": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00002: Marca de 1 carácter → \"La marca debe tener entre 2 y 50 caracteres.\", no se guarda. 2 caracteres → se guarda. 50 → se guarda. 51 → mismo error, no se guarda. Observación (usabilidad): una marca de 50 letras sin espacios estira la columna; el listado necesita scroll horizontal y los botones de las filas pasan a dos renglones."
+    },
+    "TC-62": {
+      "estado": "PASS",
+      "obtenido": "Admin da de baja EQ-00003. Con \"Incluir dados de baja\", la fila de EQ-00003 dice \"Sin acciones\" (no aparece Editar). PATCH /api/equipos/EQ-00003 → HTTP 409 \"No se puede editar un equipo dado de baja.\""
+    },
+    "TC-63": {
+      "estado": "PASS",
+      "obtenido": "PATCH /api/equipos/EQ-00004 con {estado: Disponible, codigo: EQ-99999, marca: Dell} → HTTP 200; cambios: solo marca HP → Dell. EQ-00004 sigue En reparación y con el código EQ-00004 (verificado en el listado)."
+    },
+    "TC-64": {
+      "estado": "PASS",
+      "obtenido": "Editar EQ-00001 y Guardar cambios sin modificar nada → \"No hay cambios para guardar.\"; el modal queda abierto. Observación (usabilidad): el mensaje se muestra con estilo de error (rojo) aunque es informativo."
+    },
+    "TC-65": {
+      "estado": "PASS",
+      "obtenido": "Admin crea tecnico1 (nombre ingresado: \"Tecnico uno\", rol Operador, clave1234) → \"Usuario tecnico1 creado correctamente.\", Activo. Login con tecnico1 / clave1234 → entra al listado; el encabezado muestra \"Tecnico uno\" / \"Operador\" y solo los menús de Operador (Equipos, Empleados)."
+    },
+    "TC-66": {
+      "estado": "PASS",
+      "obtenido": "Usuario \"ab\" → error de formato/longitud. \"abc\" → se crea. 20 caracteres → se crea. 21 caracteres → error. \"Tecnico\" (mayúscula) → \"El usuario debe tener entre 3 y 20 caracteres (minúsculas, números, . o _).\""
+    },
+    "TC-67": {
+      "estado": "PASS",
+      "obtenido": "Contraseña \"clave12\" (7) → error. \"clave123\" (8) → se crea pass2. \"clavelarga\" (sin números) → error. \"12345678\" (sin letras) → error."
+    },
+    "TC-68": {
+      "estado": "PASS",
+      "obtenido": "Pantalla: crear \"admin\" → \"Ya existe un usuario con ese nombre.\", no se crea. API: POST /api/usuarios con \"ADMIN\" → HTTP 400 \"El usuario debe tener entre 3 y 20 caracteres (minúsculas, números, . o _).\", no se crea."
+    },
+    "TC-69": {
+      "estado": "PASS",
+      "obtenido": "La fila de admin en Usuarios dice \"Tu usuario\", sin botones. admin intentando pasarse a Operador por API → HTTP 409 \"No podés modificar tu propio rol o estado.\". Se creó un segundo Administrador (admin3; un primer intento con admin2 no permitió el login, probablemente por un error de tipeo en la contraseña al crearlo). admin3 pasa a admin a Operador → HTTP 200. admin3 intentando desactivarse → HTTP 409 \"No podés modificar tu propio rol o estado.\""
+    },
+    "TC-70": {
+      "estado": "PASS",
+      "obtenido": "Navegador A (admin) desactiva a operador → Inactivo. Navegador B (operador con sesión abierta) recarga → vuelve al login. Login de operador → \"Usuario o contraseña incorrectos.\". A reactiva a operador → B ingresa al listado."
+    },
+    "TC-71": {
+      "estado": "PASS",
+      "obtenido": "5 intentos fallidos de operador → bloqueado. En Usuarios (admin), operador aparece \"Bloqueado\" con el botón Desbloquear. Desbloquear → \"Usuario operador desbloqueado.\", estado Activo. operador / operador123 → ingresa."
+    },
+    "TC-72": {
+      "estado": "PASS",
+      "obtenido": "Operador: sin \"Usuarios\" en el menú; /usuarios.html redirige al listado; GET /api/usuarios → HTTP 403. Admin: GET /api/usuarios → HTTP 200 con admin y operador (id, usuario, nombre, rol, activo, bloqueado), sin campo password."
+    },
+    "TC-73": {
+      "estado": "PASS",
+      "obtenido": "Navegador A (admin) pasa a operador a Administrador. Navegador B (operador con sesión abierta) recarga sin volver a loguearse → el encabezado dice Administrador, aparecen los menús Usuarios, Auditoría y Configuración, y el botón \"Dar de baja\" en los equipos Disponibles."
+    },
+    "TC-74": {
+      "estado": "PASS",
+      "obtenido": "Operador crea EQ-00006 (Lenovo Thinkpad L15, PF-56743, Notebook). En Auditoría (admin), primer registro: EQUIPO_ALTA · operador · EQ-00006 · \"Lenovo Thinkpad L15 · Serie PF-56743 · Notebook\"; debajo, LOGIN_OK de admin y de operador."
+    },
+    "TC-75": {
+      "estado": "PASS",
+      "obtenido": "Login con admin / admin999 → \"Usuario o contraseña incorrectos.\". En Auditoría: LOGIN_FALLIDO · admin · objeto admin · detalle \"Usuario o contraseña incorrectos.\"; la contraseña no aparece. También quedó registrado el LOGOUT de operador."
+    },
+    "TC-76": {
+      "estado": "PASS",
+      "obtenido": "Alta rechazada (Marca \"a\" → \"La marca debe tener entre 2 y 50 caracteres.\"). En Auditoría el total de registros no cambió: la operación rechazada no generó registro."
+    },
+    "TC-77": {
+      "estado": "PASS",
+      "obtenido": "Con 20 registros: \"Página 1 de 1 · 20 registros\" y Siguiente deshabilitado. Con un alta más: \"Página 1 de 2 · 21 registros\", 20 filas. Siguiente → página 2 con una sola fila (LOGIN_OK, el registro más antiguo)."
+    },
+    "TC-78": {
+      "estado": "PASS",
+      "obtenido": "Entregas: operador EQ-00001 (AE-000002) y admin EQ-00002 (AE-000003). Acción = ENTREGA → 2 registros. + Usuario = operador → 1 registro (AE-000002). Usuario = operador solo → ENTREGA y LOGIN_OK. Buscar \"zzz\" → \"No hay registros de auditoría con los filtros aplicados.\". Limpiar filtros → vuelven todos los registros."
+    },
+    "TC-79": {
+      "estado": "PASS",
+      "obtenido": "Desde = Hasta = 24/11/2026 → los 4 registros del día (límites inclusivos). Desde 25/11 y Hasta 24/11 → \"La fecha Desde no puede ser posterior a Hasta.\". Observación (usabilidad): junto al error, la pantalla sigue mostrando el resultado anterior (\"0 registros\" y \"No hay registros de auditoría con los filtros aplicados.\"), que no corresponde a los filtros actuales."
+    },
+    "TC-80": {
+      "estado": "PASS",
+      "obtenido": "Como admin por API: DELETE /api/auditoria → HTTP 404; PATCH /api/auditoria/1 → HTTP 404. En la pantalla de Auditoría los registros siguen intactos (solo se agregó el LOGIN_OK del login por API)."
+    },
+    "TC-81": {
+      "estado": "PASS",
+      "obtenido": "Operador: el menú muestra solo Equipos y Empleados (sin Auditoría); /auditoria.html redirige al listado (/dashboard); GET /api/auditoria → HTTP 403 \"No tenés permisos para realizar esta operación.\""
+    },
+    "TC-82": {
+      "estado": "PASS",
+      "obtenido": "Admin edita EQ-00003: Marca Samsung → LG, \"Equipo EQ-00003 actualizado correctamente.\". Auditoría: EQUIPO_EDICION · admin · EQ-00003 · Marca: \"Samsung\" → \"LG\"."
+    },
+    "TC-11": {
+      "estado": "PASS",
+      "obtenido": "Buscar \"eq-00003\" → solo EQ-00003 (Samsung S24F350); contador \"1 equipo\"."
+    },
+    "TC-13": {
+      "estado": "PASS",
+      "obtenido": "Categoría Notebook → EQ-00001 y EQ-00004 (\"2 equipos\"). + Estado En reparación → solo EQ-00004 (\"1 equipo\")."
+    },
+    "TC-14": {
+      "estado": "PASS",
+      "obtenido": "Buscar \"zzz\" → \"No se encontraron equipos con los filtros aplicados.\" con botón Limpiar filtros. Limpiar filtros → vuelven los 5 equipos y la búsqueda queda vacía."
+    },
+    "TC-44": {
+      "estado": "PASS",
+      "obtenido": "Buscar \"zzz\" y Exportar CSV → \"No hay equipos para exportar con los filtros aplicados.\"; no se descarga ningún archivo."
+    },
+    "TC-43": {
+      "estado": "PASS",
+      "obtenido": "Categoría Notebook → Exportar CSV. El archivo (UTF-8 con BOM) tiene el encabezado codigo,marca,modelo,numero_serie,categoria,estado y solo EQ-00001 (Dell) y EQ-00004 (HP); acentos correctos."
+    },
+    "TC-08": {
+      "estado": "PASS",
+      "obtenido": "Serie \"AB 12\" y \"AB#12\" → \"El número de serie solo admite letras, números y guiones.\"; \"----\" (agregado en V3) → \"El número de serie debe contener al menos una letra o un número.\". No se creó ningún equipo."
+    },
+    "TC-26": {
+      "estado": "PASS",
+      "obtenido": "Email \"martin@empresa\" y \"martin.empresa.com\" → \"Ingresá un email válido.\"; nombre \"M4rtin\" → \"El nombre debe tener entre 2 y 50 caracteres y solo letras.\". No se creó ningún empleado."
+    },
+    "TC-39": {
+      "estado": "PASS",
+      "obtenido": "La ficha de EQ-00002 muestra el panel \"Código QR\". Escaneado con la cámara del celular: el link termina en /equipo.html?codigo=EQ-00002."
+    },
+    "TC-41": {
+      "estado": "FAIL",
+      "obtenido": "Ficha de EQ-00002 en 360 × 740 como admin: el contenido va en una columna, sin scroll horizontal y con botones de 40 px, pero el menú del encabezado no entra: \"Auditoría\" se corta y \"Configuración\" queda fuera de la pantalla, sin forma de acceder. La página no es operable para el Administrador en 360 px (HU-18). Reportado como BUG-10 (regresión introducida en V3 al sumar los menús Usuarios y Auditoría)."
+    },
+    "TC-42": {
+      "estado": "PASS",
+      "obtenido": "CSV sin filtros (UTF-8 con BOM): encabezado correcto y 6 filas (EQ-00001 a EQ-00006); el modelo con coma y comilla aparece como \"Latitude 5420, 14\"\"\" (escape correcto). En Excel ninguna celda se ejecuta como fórmula. Excel muestra cada fila en la columna A (BUG-09, ya reportado)."
+    },
+    "TC-33": {
+      "estado": "PASS",
+      "obtenido": "Entrega de EQ-00001 a Pérez, Carlos → \"Equipo entregado. Acta AE-000002 generada.\"; entrega de EQ-00002 → Acta AE-000003."
+    },
+    "TC-83": {
+      "estado": "FAIL",
+      "obtenido": "5 intentos con admin / x → los primeros 4 \"Usuario o contraseña incorrectos.\" y el 5.º \"Usuario bloqueado por intentos fallidos…\". Con admin / admin123 → mismo mensaje de bloqueo. Como operador: no aparece Usuarios, /usuarios.html redirige al listado y POST /api/usuarios/admin/desbloquear → HTTP 403. Nadie puede desbloquear al único Administrador: el sistema queda sin administración 15 minutos y el ataque se puede repetir solo conociendo el nombre de usuario. Reportado como BUG-11."
+    },
+    "TC-84": {
+      "estado": "FAIL",
+      "obtenido": "5 intentos con operador / x → 4 respuestas HTTP 401 \"Usuario o contraseña incorrectos.\" y la 5.ª HTTP 423 \"Usuario bloqueado por intentos fallidos…\". 5 intentos con juan / x → siempre HTTP 401 \"Usuario o contraseña incorrectos.\". Comparando mensajes y códigos se sabe que operador existe y juan no. Reportado como BUG-12."
+    }
+  }
+}

@@ -109,10 +109,10 @@ const REGEX_NOMBRE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/;
 
 function validarEmpleado(d) {
   const errores = {};
-  if (d.nombre.length < 2 || d.nombre.length > 50 || !REGEX_NOMBRE.test(d.nombre)) {
+  if (largo(d.nombre) < 2 || largo(d.nombre) > 50 || !REGEX_NOMBRE.test(d.nombre)) {
     errores.nombre = "El nombre debe tener entre 2 y 50 caracteres y solo letras.";
   }
-  if (d.apellido.length < 2 || d.apellido.length > 50 || !REGEX_NOMBRE.test(d.apellido)) {
+  if (largo(d.apellido) < 2 || largo(d.apellido) > 50 || !REGEX_NOMBRE.test(d.apellido)) {
     errores.apellido = "El apellido debe tener entre 2 y 50 caracteres y solo letras.";
   }
   if (!/^\d{7,8}$/.test(d.documento)) {
@@ -121,7 +121,7 @@ function validarEmpleado(d) {
   if (!d.sector) {
     errores.sector = "Seleccioná un sector.";
   }
-  if (d.email.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) {
+  if (largo(d.email) > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) {
     errores.email = "Ingresá un email válido.";
   }
   return errores;
