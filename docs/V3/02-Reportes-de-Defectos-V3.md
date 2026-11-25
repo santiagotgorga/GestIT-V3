@@ -204,5 +204,5 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Tipo** | **Falso negativo**: el test falla sin que haya un defecto en la aplicación. La clase de Automatización lo menciona como una desventaja ("la automatización puede introducir errores: falsos positivos / falsos negativos"). |
 | **Causa raíz** | Defecto del script: espera sobre una referencia vieja en lugar de volver a buscar el elemento. |
 | **Corrección** | `esperarTexto`, `texto` y `existe` (test/soporte/entorno.js) vuelven a buscar el elemento en cada intento. TC‑16 verifica el límite de 500 con el atributo `maxlength` en vez de depender de tipear 501 teclas. |
-| **Confirmación** | 5 corridas seguidas con 31 de 31 PASS; volver a correr `npm run test:reporte` en la PC del equipo. |
-| **Status** | Corregido → pendiente de confirmación en la PC del equipo. |
+| **Confirmación** | 5 corridas seguidas con 31 de 31 PASS en el entorno de desarrollo, y `npm run test:reporte` en la PC del equipo (Windows, Chrome 158): **31 de 31 PASS**. |
+| **Status** | Cerrado (confirmado por QA). |
