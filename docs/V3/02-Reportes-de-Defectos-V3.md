@@ -203,8 +203,9 @@ Node.js 22 · Chromium 157. Los pasos por API se hicieron con `curl` usando la c
 | **Story and Acceptance Criteria affected** | HU‑18 (criterio 3, 360 px), RNF‑03. |
 | **Root cause** | **Regresión introducida en V3:** al agregar los menús de HU‑11 y HU‑12 no se revisó el encabezado en 360 px. El TC‑41 de V2 se había ejecutado como Operador, que tiene un menú corto. |
 | **Cómo se encontró** | Regresión manual de TC‑41 en V3, Santiago Gorga (Chrome, vista de dispositivo 360 × 740). |
-| **Confirmation testing** | Volver a ejecutar TC‑41 como Administrador (y como Operador) después de la corrección. |
-| **Status** | Abierto. |
+| **Corrección propuesta** | Permitir que el menú pase a varios renglones (`flex-wrap: wrap` en `.main-nav`). Probada en el commit `92e7dfb` y revertida por decisión del equipo: el defecto se entrega abierto en V3. |
+| **Confirmation testing** | Volver a ejecutar TC‑41 como Administrador (y como Operador) cuando se aplique la corrección. |
+| **Status** | **Abierto** (a corregir en la próxima versión). |
 | **Browsers tested** | Chrome (vista de dispositivo 360 × 740) |
 | **Environment** | Entorno local (localhost:3000), V3 (rama `v3`). |
 
