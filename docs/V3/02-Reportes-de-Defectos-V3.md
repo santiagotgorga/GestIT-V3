@@ -1,4 +1,4 @@
-# GestIT — Reportes de defectos encontrados en V2 (a corregir en V3)
+# GestIT — Reportes de defectos (V2 corregidos en V3 y nuevos de V3)
 
 Testing de Aplicaciones · UADE · Grupo 12
 
@@ -6,8 +6,9 @@ Testing de Aplicaciones · UADE · Grupo 12
 > plantilla del grupo, con los mismos agregados que BUG‑01 (Root cause, Confirmation testing, Status).
 > Después se pasan a la planilla Excel.
 
-**Cómo se encontraron.** En una sesión de **testing exploratorio con charters** sobre V2, motivada por la
-devolución de la Entrega 02 ("faltó exploratorio con mirada de romper la aplicación"):
+**Cómo se encontraron (BUG‑02 a BUG‑08).** En una sesión de **testing exploratorio con charters** sobre V2,
+realizada con asistencia de la IA durante el análisis y motivada por la devolución de la Entrega 02
+("faltó exploratorio con mirada de romper la aplicación"). El caso de BUG‑02 lo señaló el profesor:
 
 | Charter | Objetivo | Defectos |
 |---|---|---|
